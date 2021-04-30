@@ -8,7 +8,7 @@ DEBUG_TOOLBAR = False
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": "knboard",
+        "NAME": "mdclub",
         "USER": "knboard",
         "PASSWORD": "knboard@123",
         "HOST": "localhost",
