@@ -32,6 +32,7 @@ class TaskSerializer(serializers.ModelSerializer):
     assignees = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.all(), many=True, required=False
     )
+    id = serializers.CharField(source='question_id', required=False)
 
     def extra_validation(self, board=None, labels=None, assignees=None, user=None):
         if labels and board:
@@ -64,6 +65,7 @@ class TaskSerializer(serializers.ModelSerializer):
         self.extra_validation(
             board=board, labels=labels, assignees=assignees, user=user
         )
+        validated_data["user_id"] = user.id
         return super().create(validated_data)
 
     class Meta:
