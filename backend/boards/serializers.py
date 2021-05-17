@@ -70,8 +70,12 @@ class TaskSerializer(serializers.ModelSerializer):
         )
         
         validated_data["user_id"] = user.id
+        # TODO : the following two lines are not needed after db merge by replacing created and modified with create_time and update_time.
         validated_data["create_time"] = datetime.now().timestamp()
         validated_data["update_time"] = datetime.now().timestamp()
+        # TODO : the follwoing two lines are not needed after db merge by replacing descripiton with content_markdown and _rendered.
+        validated_data["content_markdown"] = validated_data['description']
+        validated_data["content_rendered"] = validated_data['description']
         return super().create(validated_data)
 
     class Meta:
