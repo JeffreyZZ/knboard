@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.contrib.auth import get_user_model
 from django.db import IntegrityError
 from rest_framework import serializers
@@ -32,6 +33,7 @@ class TaskSerializer(serializers.ModelSerializer):
     assignees = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.all(), many=True, required=False
     )
+
     id = serializers.CharField(source='question_id', required=False)
 
     def extra_validation(self, board=None, labels=None, assignees=None, user=None):
@@ -57,6 +59,7 @@ class TaskSerializer(serializers.ModelSerializer):
         self.extra_validation(board=board, labels=labels, assignees=assignees)
         return super().update(instance, validated_data)
 
+    # create new task in database
     def create(self, validated_data):
         user = self.context["request"].user
         board = validated_data["column"].board
@@ -65,7 +68,10 @@ class TaskSerializer(serializers.ModelSerializer):
         self.extra_validation(
             board=board, labels=labels, assignees=assignees, user=user
         )
+        
         validated_data["user_id"] = user.id
+        validated_data["create_time"] = datetime.now().timestamp()
+        validated_data["update_time"] = datetime.now().timestamp()
         return super().create(validated_data)
 
     class Meta:
