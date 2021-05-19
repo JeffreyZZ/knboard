@@ -145,7 +145,7 @@ class CommentViewSet(
         if (
             self.request.user
             not in Task.objects.get(
-                id=request.data.get("task")
+                question_id=request.data.get("task")
             ).column.board.members.all()
         ):
             return Response(status=HTTP_400_BAD_REQUEST)

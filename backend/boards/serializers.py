@@ -34,7 +34,9 @@ class TaskSerializer(serializers.ModelSerializer):
         queryset=User.objects.all(), many=True, required=False
     )
 
-    id = serializers.CharField(source='question_id', required=False)
+    # expose database question_id as id
+    # TODO: need to simplify it later to avoid this conversion.
+    id = serializers.IntegerField(source='question_id', required=False)
 
     def extra_validation(self, board=None, labels=None, assignees=None, user=None):
         if labels and board:
