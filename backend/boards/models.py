@@ -82,7 +82,6 @@ class Task(SortableMixin, TimeStampedModel):
     title = models.CharField(max_length=80) #Comment="标题"
     
     # knboard
-    description = models.TextField(blank=True)
     priority = models.CharField(
         max_length=1, choices=Priority.choices, default=Priority.MEDIUM
     )

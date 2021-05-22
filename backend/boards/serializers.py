@@ -37,6 +37,10 @@ class TaskSerializer(serializers.ModelSerializer):
     # expose database question_id as id
     # TODO: need to simplify it later to avoid this conversion.
     id = serializers.IntegerField(source='question_id', required=False)
+    
+    # explose content_markdown as description
+    # TODO: need to simplify it later to avoid this conversion
+    description = serializers.CharField(source='content_markdown', required=False)
 
     def extra_validation(self, board=None, labels=None, assignees=None, user=None):
         if labels and board:
@@ -75,9 +79,8 @@ class TaskSerializer(serializers.ModelSerializer):
         # TODO : the following two lines are not needed after db merge by replacing created and modified with create_time and update_time.
         validated_data["create_time"] = datetime.now().timestamp()
         validated_data["update_time"] = datetime.now().timestamp()
-        # TODO : the follwoing two lines are not needed after db merge by replacing descripiton with content_markdown and _rendered.
-        validated_data["content_markdown"] = validated_data['description']
-        validated_data["content_rendered"] = validated_data['description']
+        # TODO : content_rendered and content_markdown should be used for different purpose.
+        validated_data["content_rendered"] = validated_data['content_markdown']
         return super().create(validated_data)
 
     class Meta:
