@@ -40,7 +40,7 @@ class TaskSerializer(serializers.ModelSerializer):
     
     # explose content_markdown as description
     # TODO: need to simplify it later to avoid this conversion
-    description = serializers.CharField(source='content_markdown', required=False)
+    description = serializers.CharField(source='content_markdown', required=False, allow_blank=True)
 
     def extra_validation(self, board=None, labels=None, assignees=None, user=None):
         if labels and board:
