@@ -110,9 +110,6 @@ const DrawerContent = () => {
         <NavLink to="/boards/" exact css={linkStyles}>
           Boards
         </NavLink>
-        <NavLink to="/profile/" exact css={linkStyles}>
-          Profile
-        </NavLink>
       </List>
       <BottomBlock>
         <Tooltip title="View GitHub Repo">
