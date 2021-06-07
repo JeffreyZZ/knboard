@@ -16,6 +16,10 @@ import {
   setCreateDialogColumn,
   setCreateDialogOpen,
 } from "features/task/TaskSlice";
+import {
+  setCreateNoteDialogColumn,
+  setCreateNoteDialogOpen,
+} from "features/task/NoteSlice";
 import { css } from "@emotion/core";
 
 const Container = styled.h4`
@@ -166,6 +170,12 @@ const ColumnTitle = ({ id, title, tasksCount, ...props }: Props) => {
     handleOptionsClose();
   };
 
+  const handleAddNote = () => {
+    dispatch(setCreateNoteDialogColumn(id));
+    dispatch(setCreateNoteDialogOpen(true));
+    handleOptionsClose();
+  };
+
   const open = Boolean(anchorEl);
   const popoverId = open ? `col-${id}options-popover` : undefined;
 
@@ -222,6 +232,36 @@ const ColumnTitle = ({ id, title, tasksCount, ...props }: Props) => {
           <OptionsContent>
             <div>
               <Button
+                startIcon={<FontAwesomeIcon fixedWidth icon={faPlus} />}
+                onClick={handleAddQuestion}
+                data-testid="add-question"
+                size="small"
+                css={css`
+                  font-size: 12px;
+                  font-weight: bold;
+                  color: ${ACTION_G};
+                `}
+              >
+                Add question
+              </Button>
+            </div>
+            <div>
+              <Button
+                startIcon={<FontAwesomeIcon fixedWidth icon={faPlus} />}
+                onClick={handleAddNote}
+                data-testid="add-note"
+                size="small"
+                css={css`
+                  font-size: 12px;
+                  font-weight: bold;
+                  color: ${ACTION_G};
+                `}
+              >
+                Add note
+              </Button>
+            </div>
+            <div>
+              <Button
                 startIcon={<FontAwesomeIcon fixedWidth icon={faTrash} />}
                 onClick={handleDelete}
                 data-testid="delete-column"
@@ -233,21 +273,6 @@ const ColumnTitle = ({ id, title, tasksCount, ...props }: Props) => {
                 `}
               >
                 Delete column
-              </Button>
-            </div>
-            <div>
-              <Button
-                startIcon={<FontAwesomeIcon fixedWidth icon={faPlus} />}
-                onClick={handleAddQuestion}
-                data-testid="delete-column"
-                size="small"
-                css={css`
-                  font-size: 12px;
-                  font-weight: bold;
-                  color: ${ACTION_G};
-                `}
-              >
-                Add question
               </Button>
             </div>
           </OptionsContent>

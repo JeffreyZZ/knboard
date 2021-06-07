@@ -109,3 +109,15 @@ export interface AuthSetup {
 }
 
 export type Status = "idle" | "loading" | "succeeded" | "failed";
+
+export interface INote {
+  id: Id;
+  created: string;
+  modified: string;
+  description: string;
+  labels: Id[];
+}
+
+export interface NewNote extends Omit<INote, "id" | "created" | "modified"> {
+  column: Id;
+}

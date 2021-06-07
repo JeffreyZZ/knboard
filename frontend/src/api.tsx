@@ -29,10 +29,12 @@ export const API_AVATARS = "/api/avatars/";
 export const API_BOARDS = "/api/boards/";
 export const API_COLUMNS = "/api/columns/";
 export const API_TASKS = "/api/tasks/";
+export const API_NOTES = "/api/notes/";
 export const API_COMMENTS = "/api/comments/";
 export const API_LABELS = "/api/labels/";
 export const API_SORT_COLUMNS = "/api/sort/column/";
 export const API_SORT_TASKS = "/api/sort/task/";
+export const API_SORT_NOTES = "/api/sort/note/";
 export const API_USERS = "/api/users/";
 export const API_SEARCH_USERS = "/api/u/search/";
 

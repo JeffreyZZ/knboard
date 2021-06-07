@@ -8,6 +8,7 @@ import toastReducer from "./features/toast/ToastSlice";
 import boardReducer from "./features/board/BoardSlice";
 import columnReducer from "./features/column/ColumnSlice";
 import taskReducer from "./features/task/TaskSlice";
+import noteReducer from "./features/task/NoteSlice";
 import commentReducer from "./features/comment/CommentSlice";
 import labelReducer from "./features/label/LabelSlice";
 import memberReducer from "./features/member/MemberSlice";
@@ -23,6 +24,7 @@ export const rootReducer = combineReducers({
   board: boardReducer,
   column: columnReducer,
   task: taskReducer,
+  note: noteReducer,
   comment: commentReducer,
   member: memberReducer,
   label: labelReducer,
