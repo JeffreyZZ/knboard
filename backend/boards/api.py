@@ -14,11 +14,12 @@ from rest_framework.viewsets import GenericViewSet
 from django.db.models import Q
 from django.db.models import Prefetch
 
-from .models import Board, Task, Column, Label, Comment
+from .models import Board, Note, Task, Column, Label, Comment
 from .permissions import IsOwner, IsOwnerForDangerousMethods
 from .serializers import (
     BoardSerializer,
     TaskSerializer,
+    NoteSerializer,
     ColumnSerializer,
     BoardDetailSerializer,
     MemberSerializer,
@@ -112,6 +113,16 @@ class BoardViewSet(
 class TaskViewSet(ModelDetailViewSet):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return super().get_queryset().filter(column__board__members=user)
+
+
+class NoteViewSet(ModelDetailViewSet):
+    queryset = Note.objects.all()
+    serializer_class = NoteSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
@@ -225,6 +236,44 @@ class SortTask(APIView):
             with transaction.atomic():
                 self.move_tasks(request)
                 return sort_model(request, Task)
+        except (
+            KeyError,
+            IndexError,
+            AttributeError,
+            ValueError,
+            Column.DoesNotExist,
+            Task.DoesNotExist,
+        ):
+            return Response(status=HTTP_400_BAD_REQUEST)
+
+
+class SortNote(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def move_notes(self, request):
+        notes_by_column = request.data.get("notes")
+        board_id = request.data.get("board")
+        board = Board.objects.get(id=board_id)
+        pre_columns = Column.objects.filter(board=board)
+        pre_tasks = Task.objects.filter(column__in=pre_columns).prefetch_related(
+            "columns"
+        )
+
+        # Check for duplicate tasks
+        flat_tasks = list(chain.from_iterable(notes_by_column.values()))
+        if len(flat_tasks) != len(set(flat_tasks)):
+            raise ValueError
+
+        for column_name, task_ids in notes_by_column.items():
+            column = pre_columns.get(id=column_name)
+            tasks = pre_tasks.filter(pk__in=task_ids)
+            tasks.update(column=column)
+
+    def post(self, request, **kwargs):
+        try:
+            with transaction.atomic():
+                self.move_notes(request)
+                return sort_model(request, Note)
         except (
             KeyError,
             IndexError,

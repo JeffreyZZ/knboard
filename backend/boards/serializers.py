@@ -5,7 +5,7 @@ from rest_framework import serializers
 from rest_framework.validators import ValidationError
 
 from accounts.serializers import BoardMemberSerializer
-from .models import Board, Task, Column, Label, Comment
+from .models import Board, Note, Task, Column, Label, Comment
 
 User = get_user_model()
 
@@ -97,6 +97,42 @@ class TaskSerializer(serializers.ModelSerializer):
             "task_order",
             "column",
         ]
+
+
+class NoteSerializer(serializers.ModelSerializer):
+    column = serializers.PrimaryKeyRelatedField(
+        queryset=Column.objects.all()
+    )
+
+    labels = serializers.PrimaryKeyRelatedField(
+        queryset=Label.objects.all(), many=True, required=False
+    )
+
+    # explose content_markdown as description
+    # TODO: need to simplify it later to avoid this conversion
+    description = serializers.CharField(source='content_markdown', required=False, allow_blank=True)
+
+    def extra_validation(self, board=None, labels=None):
+        if labels and board:
+            for label in labels:
+                if label.board != board:
+                    raise serializers.ValidationError(
+                        "Can't set a label that doesn't belong to the board!"
+                    )
+
+    def create(self, validated_data):
+        board = validated_data["column"].board
+        labels = validated_data["labels"]
+
+        self.extra_validation(board=board, labels=labels)
+        
+        # TODO : content_rendered and content_markdown should be used for different purpose.
+        validated_data["content_rendered"] = validated_data['content_markdown']
+        return super().create(validated_data)
+
+    class Meta:
+        model = Note
+        fields = ["id", "note_order", "column", "description", "labels", "created", "modified"]
 
 
 class CommentSerializer(serializers.ModelSerializer):

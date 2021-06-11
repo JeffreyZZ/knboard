@@ -31,8 +31,10 @@ from boards.api import (
     ColumnViewSet,
     LabelViewSet,
     TaskViewSet,
+    NoteViewSet,
     SortColumn,
     SortTask,
+    SortNote,
     CommentViewSet,
 )
 
@@ -43,6 +45,7 @@ router.register(r"boards", BoardViewSet)
 router.register(r"columns", ColumnViewSet)
 router.register(r"labels", LabelViewSet)
 router.register(r"tasks", TaskViewSet)
+router.register(r"notes", NoteViewSet)
 router.register(r"comments", CommentViewSet)
 
 urlpatterns = [
@@ -50,6 +53,7 @@ urlpatterns = [
     path("api/u/search/", UserSearchView.as_view(), name="user-search"),
     path("api/sort/column/", SortColumn.as_view(), name="sort-column"),
     path("api/sort/task/", SortTask.as_view(), name="sort-task"),
+    path("api/sort/note/", SortNote.as_view(), name="sort-note"),
     path("api-auth/", include("rest_framework.urls")),
     path("auth/", include("dj_rest_auth.urls")),
     path("auth/registration/", include("dj_rest_auth.registration.urls")),

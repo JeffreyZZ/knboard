@@ -101,6 +101,20 @@ class Task(SortableMixin, TimeStampedModel):
         ]
 
 
+class Note(SortableMixin, TimeStampedModel):
+    content_markdown = models.TextField(null=True)  # Comment="原始的正文内容"
+    content_rendered = models.TextField(null=True)  # Comment="过滤渲染后的正文内容"
+    labels = models.ManyToManyField(Label, related_name="notes")
+    column = SortableForeignKey(Column, related_name="notes", on_delete=models.CASCADE)
+    note_order = models.PositiveIntegerField(default=0, editable=False, db_index=True)
+
+    def __str__(self):
+        return f"{self.id} - {self.content_rendered}"
+
+    class Meta:
+        ordering = ["note_order"]
+
+
 class Comment(TimeStampedModel):
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="comments")
     author = models.ForeignKey(User, on_delete=models.PROTECT, related_name="comments")
