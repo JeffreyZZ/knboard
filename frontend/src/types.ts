@@ -53,9 +53,11 @@ export interface ITask {
   labels: Id[];
   assignees: Id[];
   priority: PriorityValue;
+  task_order: number;
 }
 
-export interface NewTask extends Omit<ITask, "id" | "created" | "modified"> {
+export interface NewTask
+  extends Omit<ITask, "id" | "created" | "modified" | "task_order"> {
   column: Id;
 }
 
@@ -116,8 +118,10 @@ export interface INote {
   modified: string;
   description: string;
   labels: Id[];
+  note_order: number;
 }
 
-export interface NewNote extends Omit<INote, "id" | "created" | "modified"> {
+export interface NewNote
+  extends Omit<INote, "id" | "created" | "modified" | "note_order"> {
   column: Id;
 }

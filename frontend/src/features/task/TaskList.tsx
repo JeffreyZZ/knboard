@@ -2,13 +2,14 @@ import React from "react";
 import styled from "@emotion/styled";
 import { R50, T50, COLUMN_COLOR } from "utils/colors";
 import { grid, barHeight, taskWidth } from "const";
-import { ITask } from "types";
+import { ITask, INote } from "types";
 import {
   DroppableProvided,
   DroppableStateSnapshot,
   Droppable,
 } from "react-beautiful-dnd";
 import Task from "./Task";
+import Note from "./Note";
 import AddTask from "./AddTask";
 import { css } from "@emotion/core";
 
@@ -59,31 +60,78 @@ interface Props {
   columnId: number;
   listType: string;
   tasks: ITask[];
+  notes: INote[];
   index: number;
 }
 
 interface TaskListProps {
   tasks: ITask[];
+  notes: INote[];
 }
 
-const InnerTaskList = ({ tasks }: TaskListProps) => (
-  <>
-    {tasks.map((task: ITask, index: number) => (
-      <Task key={task.id} task={task} index={index} />
-    ))}
-  </>
-);
+const InnerTaskList = ({ tasks, notes }: TaskListProps) => {
+  const sections = [];
+  let taskIndex = 0;
+  let noteIndex = 0;
+
+  while (taskIndex < tasks.length && noteIndex < notes.length) {
+    if (tasks[taskIndex].task_order <= notes[noteIndex].note_order) {
+      sections.push(
+        <Task
+          key={tasks[taskIndex].id}
+          task={tasks[taskIndex]}
+          index={taskIndex}
+        />
+      );
+      taskIndex++;
+    } else {
+      sections.push(
+        <Note
+          key={notes[noteIndex].id}
+          note={notes[noteIndex]}
+          index={noteIndex}
+        />
+      );
+      noteIndex++;
+    }
+  }
+
+  while (taskIndex < tasks.length) {
+    sections.push(
+      <Task
+        key={tasks[taskIndex].id}
+        task={tasks[taskIndex]}
+        index={taskIndex}
+      />
+    );
+    taskIndex++;
+  }
+
+  while (noteIndex < notes.length) {
+    sections.push(
+      <Note
+        key={notes[noteIndex].id}
+        note={notes[noteIndex]}
+        index={noteIndex}
+      />
+    );
+    noteIndex++;
+  }
+  return <>{sections}</>;
+};
 
 interface InnerListProps {
   dropProvided: DroppableProvided;
   columnId: number;
   tasks: ITask[];
+  notes: INote[];
   index: number;
 }
 
 const InnerList = ({
   columnId,
   tasks,
+  notes,
   dropProvided,
   index,
 }: InnerListProps) => (
@@ -96,14 +144,20 @@ const InnerList = ({
         overflow-y: scroll;
       `}
     >
-      <InnerTaskList tasks={tasks} />
+      <InnerTaskList tasks={tasks} notes={notes} />
       {dropProvided.placeholder}
     </DropZone>
     <AddTask columnId={columnId} index={index} />
   </Container>
 );
 
-const TaskList = ({ columnId, listType, tasks: tasks, index }: Props) => (
+const TaskList = ({
+  columnId,
+  listType,
+  tasks: tasks,
+  notes: notes,
+  index,
+}: Props) => (
   <Droppable droppableId={columnId.toString()} type={listType}>
     {(
       dropProvided: DroppableProvided,
@@ -117,6 +171,7 @@ const TaskList = ({ columnId, listType, tasks: tasks, index }: Props) => (
         <InnerList
           columnId={columnId}
           tasks={tasks}
+          notes={notes}
           dropProvided={dropProvided}
           index={index}
         />

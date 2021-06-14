@@ -144,10 +144,11 @@ class CommentSerializer(serializers.ModelSerializer):
 class ColumnSerializer(BoardModelSerializer):
     board = serializers.PrimaryKeyRelatedField(queryset=Board.objects.all())
     tasks = TaskSerializer(many=True, read_only=True)
+    notes = NoteSerializer(many=True, read_only=True)
 
     class Meta:
         model = Column
-        fields = ["id", "title", "tasks", "column_order", "board"]
+        fields = ["id", "title", "tasks", "notes", "column_order", "board"]
 
 
 class LabelSerializer(BoardModelSerializer):

@@ -95,10 +95,10 @@ export const slice = createSlice({
       const byColumn: TasksByColumn = {};
       const byId: TasksById = {};
       for (const col of action.payload.columns) {
-        for (const task of col.tasks) {
-          byId[task.id] = task;
+        for (const note of col.notes) {
+          byId[note.id] = note;
         }
-        byColumn[col.id] = col.tasks.map((t) => t.id);
+        byColumn[col.id] = col.notes.map((t) => t.id);
       }
       state.byColumn = byColumn;
       state.byId = byId;

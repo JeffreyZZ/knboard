@@ -60,6 +60,8 @@ const Board = () => {
   const columns = useSelector(columnSelectors.selectAll);
   const tasksByColumn = useSelector((state: RootState) => state.task.byColumn);
   const tasksById = useSelector((state: RootState) => state.task.byId);
+  const notesByColumn = useSelector((state: RootState) => state.note.byColumn);
+  const notesById = useSelector((state: RootState) => state.note.byId);
   const dispatch = useDispatch();
   const { id } = useParams();
 
@@ -140,6 +142,9 @@ const Board = () => {
                         index={index}
                         tasks={tasksByColumn[column.id].map(
                           (taskId) => tasksById[taskId]
+                        )}
+                        notes={notesByColumn[column.id].map(
+                          (noteId) => notesById[noteId]
                         )}
                       />
                     ))}
