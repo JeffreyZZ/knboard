@@ -106,13 +106,14 @@ class Note(SortableMixin, TimeStampedModel):
     content_rendered = models.TextField(null=True)  # Comment="过滤渲染后的正文内容"
     labels = models.ManyToManyField(Label, related_name="notes")
     column = SortableForeignKey(Column, related_name="notes", on_delete=models.CASCADE)
-    note_order = models.PositiveIntegerField(default=0, editable=False, db_index=True)
+    #TODO: named as task_ is to be consistent with task.
+    task_order = models.PositiveIntegerField(default=0, editable=False, db_index=True)
 
     def __str__(self):
         return f"{self.id} - {self.content_rendered}"
 
     class Meta:
-        ordering = ["note_order"]
+        ordering = ["task_order"]
 
 
 class Comment(TimeStampedModel):

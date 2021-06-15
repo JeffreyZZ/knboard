@@ -6,7 +6,7 @@ import {
   Draggable,
   DraggableStateSnapshot,
 } from "react-beautiful-dnd";
-import { N30, N0, N70, PRIMARY, Y50 } from "utils/colors";
+import { N30, N70, PRIMARY, Y50 } from "utils/colors";
 import { taskContainerStyles } from "styles";
 import { useDispatch } from "react-redux";
 import { setEditDialogOpen } from "./TaskSlice";
@@ -119,7 +119,7 @@ const Task = ({ note: note, style, index }: Props) => {
           <Content>
             <TextContent>{note.description}</TextContent>
             <TaskId>id: {note.id}</TaskId>
-            {/* <TaskLabels task={note as ITask} /> */}
+            <TaskLabels task={note as ITask} />
           </Content>
         </Container>
       )}

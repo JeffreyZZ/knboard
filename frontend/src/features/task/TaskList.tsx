@@ -75,7 +75,7 @@ const InnerTaskList = ({ tasks, notes }: TaskListProps) => {
   let noteIndex = 0;
 
   while (taskIndex < tasks.length && noteIndex < notes.length) {
-    if (tasks[taskIndex].task_order <= notes[noteIndex].note_order) {
+    if (tasks[taskIndex].task_order <= notes[noteIndex].task_order) {
       sections.push(
         <Task
           key={tasks[taskIndex].id}

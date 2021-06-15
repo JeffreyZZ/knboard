@@ -132,7 +132,7 @@ class NoteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Note
-        fields = ["id", "note_order", "column", "description", "labels", "created", "modified"]
+        fields = ["id", "task_order", "column", "description", "labels", "created", "modified"]
 
 
 class CommentSerializer(serializers.ModelSerializer):

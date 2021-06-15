@@ -118,10 +118,10 @@ export interface INote {
   modified: string;
   description: string;
   labels: Id[];
-  note_order: number;
+  task_order: number;
 }
 
 export interface NewNote
-  extends Omit<INote, "id" | "created" | "modified" | "note_order"> {
+  extends Omit<INote, "id" | "created" | "modified" | "task_order"> {
   column: Id;
 }
