@@ -9,7 +9,7 @@ import {
 import { N30, N70, PRIMARY, Y50 } from "utils/colors";
 import { taskContainerStyles } from "styles";
 import { useDispatch } from "react-redux";
-import { setEditDialogOpen } from "./TaskSlice";
+import { setEditNoteDialogOpen } from "./NoteSlice";
 import TaskLabels from "./TaskLabels";
 
 const getBackgroundColor = (isDragging: boolean, isGroupedOver: boolean) => {
@@ -93,7 +93,7 @@ const Task = ({ note: note, style, index }: Props) => {
   const dispatch = useDispatch();
 
   const handleClick = () => {
-    dispatch(setEditDialogOpen(note.id));
+    dispatch(setEditNoteDialogOpen(note.id));
   };
 
   return (
