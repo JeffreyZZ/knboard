@@ -89,7 +89,7 @@ interface Props {
   index: number;
 }
 
-const Task = ({ note: note, style, index }: Props) => {
+const Note = ({ note: note, style, index }: Props) => {
   const dispatch = useDispatch();
 
   const handleClick = () => {
@@ -97,7 +97,7 @@ const Task = ({ note: note, style, index }: Props) => {
   };
 
   return (
-    <Draggable key={note.id} draggableId={`task-${note.id}`} index={index}>
+    <Draggable key={note.id} draggableId={`note-${note.id}`} index={index}>
       {(
         dragProvided: DraggableProvided,
         dragSnapshot: DraggableStateSnapshot
@@ -110,9 +110,9 @@ const Task = ({ note: note, style, index }: Props) => {
           {...dragProvided.dragHandleProps}
           style={getStyle(dragProvided, style)}
           data-is-dragging={dragSnapshot.isDragging}
-          data-testid={`task-${note.id}`}
+          data-testid={`note-${note.id}`}
           data-index={index}
-          aria-label={`task ${note.description}`}
+          aria-label={`note ${note.description}`}
           onClick={handleClick}
           css={taskContainerStyles}
         >
@@ -127,4 +127,4 @@ const Task = ({ note: note, style, index }: Props) => {
   );
 };
 
-export default React.memo<Props>(Task);
+export default React.memo<Props>(Note);

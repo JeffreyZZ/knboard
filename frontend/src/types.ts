@@ -65,6 +65,10 @@ export interface TasksByColumn {
   [key: string]: Id[];
 }
 
+export interface NotesByColumn {
+  [key: string]: Id[];
+}
+
 export interface User {
   id: number;
   username: string;

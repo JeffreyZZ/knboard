@@ -255,19 +255,19 @@ class SortNote(APIView):
         board_id = request.data.get("board")
         board = Board.objects.get(id=board_id)
         pre_columns = Column.objects.filter(board=board)
-        pre_tasks = Task.objects.filter(column__in=pre_columns).prefetch_related(
+        pre_notes = Note.objects.filter(column__in=pre_columns).prefetch_related(
             "columns"
         )
 
-        # Check for duplicate tasks
-        flat_tasks = list(chain.from_iterable(notes_by_column.values()))
-        if len(flat_tasks) != len(set(flat_tasks)):
+        # Check for duplicate notes
+        flat_notes = list(chain.from_iterable(notes_by_column.values()))
+        if len(flat_notes) != len(set(flat_notes)):
             raise ValueError
 
-        for column_name, task_ids in notes_by_column.items():
+        for column_name, note_ids in notes_by_column.items():
             column = pre_columns.get(id=column_name)
-            tasks = pre_tasks.filter(pk__in=task_ids)
-            tasks.update(column=column)
+            notes = pre_notes.filter(pk__in=note_ids)
+            notes.update(column=column)
 
     def post(self, request, **kwargs):
         try:

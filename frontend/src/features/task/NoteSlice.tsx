@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import { TasksByColumn, INote, Id, NewNote } from "types";
+import { NotesByColumn, INote, Id, NewNote } from "types";
 import { fetchBoardById } from "features/board/BoardSlice";
 import { AppDispatch, AppThunk, RootState } from "store";
 import {
@@ -11,11 +11,11 @@ import api, { API_SORT_NOTES, API_NOTES } from "api";
 import { addColumn, deleteColumn } from "features/column/ColumnSlice";
 import { deleteLabel } from "features/label/LabelSlice";
 
-type TasksById = Record<string, INote>;
+type NotesById = Record<string, INote>;
 
 interface InitialState {
-  byColumn: TasksByColumn;
-  byId: TasksById;
+  byColumn: NotesByColumn;
+  byId: NotesById;
   createLoading: boolean;
   createNoteDialogOpen: boolean;
   createNoteDialogColumn: Id | null;
@@ -77,7 +77,7 @@ export const slice = createSlice({
   name: "note",
   initialState,
   reducers: {
-    setTasksByColumn: (state, action: PayloadAction<TasksByColumn>) => {
+    setNotesByColumn: (state, action: PayloadAction<NotesByColumn>) => {
       state.byColumn = action.payload;
     },
     setEditNoteDialogOpen: (state, action: PayloadAction<Id | null>) => {
@@ -92,8 +92,8 @@ export const slice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchBoardById.fulfilled, (state, action) => {
-      const byColumn: TasksByColumn = {};
-      const byId: TasksById = {};
+      const byColumn: NotesByColumn = {};
+      const byId: NotesById = {};
       for (const col of action.payload.columns) {
         for (const note of col.notes) {
           byId[note.id] = note;
@@ -147,27 +147,27 @@ export const slice = createSlice({
 });
 
 export const {
-  setTasksByColumn,
+  setNotesByColumn,
   setCreateNoteDialogOpen,
   setCreateNoteDialogColumn,
   setEditNoteDialogOpen,
 } = slice.actions;
 
 export const updateTasksByColumn = (
-  tasksByColumn: TasksByColumn
+  notesByColumn: NotesByColumn
 ): AppThunk => async (dispatch: AppDispatch, getState: () => RootState) => {
   const state = getState();
-  const previousTasksByColumn = state.task.byColumn;
+  const previousNotesByColumn = state.note.byColumn;
   const boardId = state.board.detail?.id;
   try {
-    dispatch(setTasksByColumn(tasksByColumn));
+    dispatch(setNotesByColumn(notesByColumn));
     await api.post(API_SORT_NOTES, {
       board: boardId,
-      tasks: tasksByColumn,
-      order: Object.values(tasksByColumn).flat(),
+      notes: notesByColumn,
+      order: Object.values(notesByColumn).flat(),
     });
   } catch (err) {
-    dispatch(setTasksByColumn(previousTasksByColumn));
+    dispatch(setNotesByColumn(previousNotesByColumn));
     dispatch(createErrorToast(err.toString()));
   }
 };
