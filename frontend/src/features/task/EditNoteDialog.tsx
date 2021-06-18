@@ -12,7 +12,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   setEditNoteDialogOpen,
   deleteNote,
-  updateTasksByColumn,
+  updateNotesByColumn,
   patchNote,
 } from "./NoteSlice";
 import styled from "@emotion/styled";
@@ -249,12 +249,12 @@ const EditNoteDialog = () => {
     // insert into next
     next.splice(newPosition, 0, task.id);
 
-    const updatedTasksByColumn: TasksByColumn = {
+    const updatedNotesByColumn: TasksByColumn = {
       ...notesByColumn,
       [column.id]: current,
       [value.id]: next,
     };
-    dispatch(updateTasksByColumn(updatedTasksByColumn));
+    dispatch(updateNotesByColumn(updatedNotesByColumn));
     handleClose();
   };
 

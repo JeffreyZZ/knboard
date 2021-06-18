@@ -153,7 +153,7 @@ export const {
   setEditNoteDialogOpen,
 } = slice.actions;
 
-export const updateTasksByColumn = (
+export const updateNotesByColumn = (
   notesByColumn: NotesByColumn
 ): AppThunk => async (dispatch: AppDispatch, getState: () => RootState) => {
   const state = getState();

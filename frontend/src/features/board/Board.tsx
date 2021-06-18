@@ -10,9 +10,11 @@ import {
 import Column from "features/column";
 import { IColumn } from "types";
 import reorder, { reorderTasks } from "utils/reorder";
+import { reorderNotes } from "utils/reorderNotes";
 import { RootState } from "store";
 import { useSelector, useDispatch } from "react-redux";
 import { updateTasksByColumn } from "features/task/TaskSlice";
+import { updateNotesByColumn } from "features/task/NoteSlice";
 import { updateColumns, columnSelectors } from "features/column/ColumnSlice";
 import { useParams } from "react-router-dom";
 import { fetchBoardById } from "./BoardSlice";
@@ -99,12 +101,21 @@ const Board = () => {
       return;
     }
 
-    const data = reorderTasks({
-      tasksByColumn,
-      source,
-      destination,
-    });
-    dispatch(updateTasksByColumn(data.tasksByColumn));
+    if (result.draggableId.startsWith("note")) {
+      const data = reorderNotes({
+        notesByColumn,
+        source,
+        destination,
+      });
+      dispatch(updateNotesByColumn(data.notesByColumn));
+    } else {
+      const data = reorderTasks({
+        tasksByColumn,
+        source,
+        destination,
+      });
+      dispatch(updateTasksByColumn(data.tasksByColumn));
+    }
   };
 
   const detailDataExists = detail?.id.toString() === id;
