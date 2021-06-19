@@ -31,7 +31,7 @@ export const reorderTasks = ({
   const next: Id[] = [...tasksByColumn[destination.droppableId]];
   const target: Id = current[source.index];
 
-  // moving to same list
+  // moving to same col
   if (source.droppableId === destination.droppableId) {
     const reordered: Id[] = reorder(current, source.index, destination.index);
     const result: TasksByColumn = {
@@ -43,7 +43,7 @@ export const reorderTasks = ({
     };
   }
 
-  // moving to different list
+  // moving to different col
 
   // remove from original
   current.splice(source.index, 1);

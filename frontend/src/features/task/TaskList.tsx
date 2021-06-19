@@ -73,6 +73,7 @@ const InnerTaskList = ({ tasks, notes }: TaskListProps) => {
   const sections = [];
   let taskIndex = 0;
   let noteIndex = 0;
+  let indexInCol = 0;
 
   while (taskIndex < tasks.length && noteIndex < notes.length) {
     if (tasks[taskIndex].task_order <= notes[noteIndex].task_order) {
@@ -80,7 +81,7 @@ const InnerTaskList = ({ tasks, notes }: TaskListProps) => {
         <Task
           key={tasks[taskIndex].id}
           task={tasks[taskIndex]}
-          index={taskIndex}
+          index={indexInCol++}
         />
       );
       taskIndex++;
@@ -89,7 +90,7 @@ const InnerTaskList = ({ tasks, notes }: TaskListProps) => {
         <Note
           key={notes[noteIndex].id}
           note={notes[noteIndex]}
-          index={noteIndex}
+          index={indexInCol++}
         />
       );
       noteIndex++;
@@ -101,7 +102,7 @@ const InnerTaskList = ({ tasks, notes }: TaskListProps) => {
       <Task
         key={tasks[taskIndex].id}
         task={tasks[taskIndex]}
-        index={taskIndex}
+        index={indexInCol++}
       />
     );
     taskIndex++;
@@ -112,7 +113,7 @@ const InnerTaskList = ({ tasks, notes }: TaskListProps) => {
       <Note
         key={notes[noteIndex].id}
         note={notes[noteIndex]}
-        index={noteIndex}
+        index={indexInCol++}
       />
     );
     noteIndex++;

@@ -101,6 +101,7 @@ const Board = () => {
       return;
     }
 
+    //  reordering task and note
     if (result.draggableId.startsWith("note")) {
       const data = reorderNotes({
         notesByColumn,
