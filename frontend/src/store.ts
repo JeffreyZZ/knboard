@@ -7,8 +7,6 @@ import profileReducer from "./features/profile/ProfileSlice";
 import toastReducer from "./features/toast/ToastSlice";
 import boardReducer from "./features/board/BoardSlice";
 import columnReducer from "./features/column/ColumnSlice";
-import taskReducer from "./features/task/TaskSlice";
-import noteReducer from "./features/task/NoteSlice";
 import columnItemReducer from "./features/task/ColumnItemSlice";
 import commentReducer from "./features/comment/CommentSlice";
 import labelReducer from "./features/label/LabelSlice";

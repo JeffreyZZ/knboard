@@ -13,7 +13,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   setEditDialogOpen,
   deleteTask,
-  updateTasksByColumn,
+  updateItemsByColumn,
   patchTask,
 } from "./ColumnItemSlice";
 import styled from "@emotion/styled";
@@ -312,7 +312,7 @@ const EditTaskDialog = () => {
       [column.id]: current,
       [value.id]: next,
     };
-    dispatch(updateTasksByColumn(updatedTasksByColumn));
+    dispatch(updateItemsByColumn(updatedTasksByColumn));
     handleClose();
   };
 

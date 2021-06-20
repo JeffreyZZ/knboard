@@ -20,7 +20,6 @@ import api, { API_SORT_TASKS, API_TASKS, API_SORT_NOTES, API_NOTES } from "api";
 import { addColumn, deleteColumn } from "features/column/ColumnSlice";
 import { deleteLabel } from "features/label/LabelSlice";
 import { removeBoardMember } from "features/member/MemberSlice";
-import { isVariableDeclarationList } from "typescript";
 
 type ItemsById = Record<string, IColumnItem>;
 
@@ -212,8 +211,10 @@ export const slice = createSlice({
       state.createLoading = true;
     });
     builder.addCase(createTask.fulfilled, (state, action) => {
-      state.byId[action.payload.id] = action.payload;
-      state.byColumn[action.payload.column].push("T" + action.payload.id);
+      const task: ITask = action.payload;
+      task.id = "T" + task.id;
+      state.byId[task.id] = task;
+      state.byColumn[action.payload.column].push(task.id);
       state.createDialogOpen = false;
       state.createLoading = false;
     });
@@ -263,9 +264,11 @@ export const slice = createSlice({
       state.createLoading = true;
     });
     builder.addCase(createNote.fulfilled, (state, action) => {
-      state.byId[action.payload.id] = action.payload;
-      state.byColumn[action.payload.column].push("N" + action.payload.id);
-      state.createDialogOpen = false;
+      const note: INote = action.payload;
+      note.id = "N" + note.id;
+      state.byId[note.id] = note;
+      state.byColumn[action.payload.column].push(note.id);
+      state.createNoteDialogOpen = false;
       state.createLoading = false;
     });
     builder.addCase(createNote.rejected, (state) => {
@@ -298,37 +301,39 @@ export const {
 /////////////////
 // Update
 /////////////////
-export const updateTasksByColumn = (
-  tasksByColumn: ItemsByColumn
-): AppThunk => async (dispatch: AppDispatch, getState: () => RootState) => {
-  const state = getState();
-  const previousTasksByColumn = state.item.byColumn;
-  const boardId = state.board.detail?.id;
-  try {
-    dispatch(setTasksByColumn(tasksByColumn));
-    await api.post(API_SORT_TASKS, {
-      board: boardId,
-      tasks: tasksByColumn,
-      order: Object.values(tasksByColumn).flat(),
-    });
-  } catch (err) {
-    dispatch(setTasksByColumn(previousTasksByColumn));
-    dispatch(createErrorToast(err.toString()));
-  }
-};
-
-export const updateNotesByColumn = (
-  notesByColumn: ItemsByColumn
+export const updateItemsByColumn = (
+  itemsByColumn: ItemsByColumn
 ): AppThunk => async (dispatch: AppDispatch, getState: () => RootState) => {
   const state = getState();
   const previousNotesByColumn = state.item.byColumn;
   const boardId = state.board.detail?.id;
+
+  const notesByColumn: ItemsByColumn = {};
+  for (const columnId in itemsByColumn) {
+    notesByColumn[columnId] = itemsByColumn[columnId]
+      .filter((i) => i.startsWith("N"))
+      .map((i) => i.substring(1));
+  }
+
+  const tasksByColumn: ItemsByColumn = {};
+  for (const columnId in itemsByColumn) {
+    tasksByColumn[columnId] = itemsByColumn[columnId]
+      .filter((i) => i.startsWith("T"))
+      .map((i) => i.substring(1));
+  }
+
   try {
-    dispatch(setNotesByColumn(notesByColumn));
+    dispatch(setNotesByColumn(itemsByColumn));
     await api.post(API_SORT_NOTES, {
       board: boardId,
       notes: notesByColumn,
       order: Object.values(notesByColumn).flat(),
+    });
+
+    await api.post(API_SORT_TASKS, {
+      board: boardId,
+      tasks: tasksByColumn,
+      order: Object.values(tasksByColumn).flat(),
     });
   } catch (err) {
     dispatch(setNotesByColumn(previousNotesByColumn));
