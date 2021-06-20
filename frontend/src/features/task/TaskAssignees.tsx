@@ -12,7 +12,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BoardMember, ITask } from "types";
 import { PRIMARY } from "utils/colors";
-import { patchTask } from "./TaskSlice";
+import { patchTask } from "./ColumnItemSlice";
 
 const Container = styled.div`
   margin-bottom: 1rem;

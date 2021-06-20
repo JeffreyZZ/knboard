@@ -12,7 +12,6 @@ import Task from "./Task";
 import Note from "./Note";
 import AddTask from "./AddTask";
 import { css } from "@emotion/core";
-import { count } from "console";
 
 export const getBackgroundColor = (
   isDraggingOver: boolean,

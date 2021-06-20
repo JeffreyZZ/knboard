@@ -1,4 +1,4 @@
-import { TasksByColumn, Id } from "types";
+import { ItemsByColumn } from "types";
 import { DraggableLocation } from "react-beautiful-dnd";
 
 // a little function to help us with reordering the result
@@ -13,33 +13,37 @@ const reorder = (list: any[], startIndex: number, endIndex: number): any[] => {
 export default reorder;
 
 interface ReorderTasksArgs {
-  tasksByColumn: TasksByColumn;
+  itemsByColumn: ItemsByColumn;
   source: DraggableLocation;
   destination: DraggableLocation;
 }
 
 export interface ReorderTasksResult {
-  tasksByColumn: TasksByColumn;
+  itemsByColumn: ItemsByColumn;
 }
 
 export const reorderTasks = ({
-  tasksByColumn,
+  itemsByColumn,
   source,
   destination,
 }: ReorderTasksArgs): ReorderTasksResult => {
-  const current: Id[] = [...tasksByColumn[source.droppableId]];
-  const next: Id[] = [...tasksByColumn[destination.droppableId]];
-  const target: Id = current[source.index];
+  const current: string[] = [...itemsByColumn[source.droppableId]];
+  const next: string[] = [...itemsByColumn[destination.droppableId]];
+  const target: string = current[source.index];
 
   // moving to same col
   if (source.droppableId === destination.droppableId) {
-    const reordered: Id[] = reorder(current, source.index, destination.index);
-    const result: TasksByColumn = {
-      ...tasksByColumn,
+    const reordered: string[] = reorder(
+      current,
+      source.index,
+      destination.index
+    );
+    const result: ItemsByColumn = {
+      ...itemsByColumn,
       [source.droppableId]: reordered,
     };
     return {
-      tasksByColumn: result,
+      itemsByColumn: result,
     };
   }
 
@@ -50,13 +54,13 @@ export const reorderTasks = ({
   // insert into next
   next.splice(destination.index, 0, target);
 
-  const result: TasksByColumn = {
-    ...tasksByColumn,
+  const result: ItemsByColumn = {
+    ...itemsByColumn,
     [source.droppableId]: current,
     [destination.droppableId]: next,
   };
 
   return {
-    tasksByColumn: result,
+    itemsByColumn: result,
   };
 };
