@@ -12,13 +12,13 @@ const reorder = (list: any[], startIndex: number, endIndex: number): any[] => {
 
 export default reorder;
 
-interface ReorderTasksArgs {
+interface ReorderItemsArgs {
   itemsByColumn: ItemsByColumn;
   source: DraggableLocation;
   destination: DraggableLocation;
 }
 
-export interface ReorderTasksResult {
+export interface ReorderItemsResult {
   itemsByColumn: ItemsByColumn;
 }
 
@@ -26,7 +26,7 @@ export const reorderTasks = ({
   itemsByColumn,
   source,
   destination,
-}: ReorderTasksArgs): ReorderTasksResult => {
+}: ReorderItemsArgs): ReorderItemsResult => {
   const current: string[] = [...itemsByColumn[source.droppableId]];
   const next: string[] = [...itemsByColumn[destination.droppableId]];
   const target: string = current[source.index];

@@ -7,7 +7,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { css } from "@emotion/core";
 import { useDispatch } from "react-redux";
-import { setCreateDialogColumn, setCreateDialogOpen } from "./TaskSlice";
+import { setCreateDialogColumn, setCreateDialogOpen } from "./ColumnItemSlice";
 
 interface Props {
   columnId: Id;
