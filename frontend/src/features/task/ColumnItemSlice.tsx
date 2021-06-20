@@ -307,34 +307,49 @@ export const updateItemsByColumn = (
   const state = getState();
   const previousNotesByColumn = state.item.byColumn;
   const boardId = state.board.detail?.id;
+  let notesNeedUpdate = false;
+  let tasksNeedUpdate = false;
 
   const notesByColumn: ItemsByColumn = {};
   for (const columnId in itemsByColumn) {
-    notesByColumn[columnId] = itemsByColumn[columnId]
+    const notes = itemsByColumn[columnId]
       .filter((i) => i.startsWith("N"))
       .map((i) => i.substring(1));
+    if (notes.length > 0) {
+      notesNeedUpdate = true;
+      notesByColumn[columnId] = notes;
+    }
   }
 
   const tasksByColumn: ItemsByColumn = {};
   for (const columnId in itemsByColumn) {
-    tasksByColumn[columnId] = itemsByColumn[columnId]
+    const tasks = itemsByColumn[columnId]
       .filter((i) => i.startsWith("T"))
       .map((i) => i.substring(1));
+    if (tasks.length > 0) {
+      tasksNeedUpdate = true;
+      tasksByColumn[columnId] = tasks;
+    }
   }
 
   try {
     dispatch(setNotesByColumn(itemsByColumn));
-    await api.post(API_SORT_NOTES, {
-      board: boardId,
-      notes: notesByColumn,
-      order: Object.values(notesByColumn).flat(),
-    });
 
-    await api.post(API_SORT_TASKS, {
-      board: boardId,
-      tasks: tasksByColumn,
-      order: Object.values(tasksByColumn).flat(),
-    });
+    if (notesNeedUpdate) {
+      await api.post(API_SORT_NOTES, {
+        board: boardId,
+        notes: notesByColumn,
+        order: Object.values(notesByColumn).flat(),
+      });
+    }
+
+    if (tasksNeedUpdate) {
+      await api.post(API_SORT_TASKS, {
+        board: boardId,
+        tasks: tasksByColumn,
+        order: Object.values(tasksByColumn).flat(),
+      });
+    }
   } catch (err) {
     dispatch(setNotesByColumn(previousNotesByColumn));
     dispatch(createErrorToast(err.toString()));
