@@ -37,6 +37,11 @@ export interface IColumn {
   board: Id;
 }
 
+export interface IColumnItem {
+  id: string;
+  task_order: number;
+}
+
 export type PriorityValue = "H" | "M" | "L";
 
 export interface Priority {
@@ -44,8 +49,7 @@ export interface Priority {
   label: "High" | "Medium" | "Low";
 }
 
-export interface ITask {
-  id: Id;
+export interface ITask extends IColumnItem {
   created: string;
   modified: string;
   title: string;
@@ -53,12 +57,15 @@ export interface ITask {
   labels: Id[];
   assignees: Id[];
   priority: PriorityValue;
-  task_order: number;
 }
 
 export interface NewTask
   extends Omit<ITask, "id" | "created" | "modified" | "task_order"> {
   column: Id;
+}
+
+export interface ItemsByColumn {
+  [key: string]: string[];
 }
 
 export interface TasksByColumn {
@@ -116,13 +123,11 @@ export interface AuthSetup {
 
 export type Status = "idle" | "loading" | "succeeded" | "failed";
 
-export interface INote {
-  id: Id;
+export interface INote extends IColumnItem {
   created: string;
   modified: string;
   description: string;
   labels: Id[];
-  task_order: number;
 }
 
 export interface NewNote

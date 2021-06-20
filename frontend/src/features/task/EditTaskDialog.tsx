@@ -15,7 +15,7 @@ import {
   deleteTask,
   updateTasksByColumn,
   patchTask,
-} from "./TaskSlice";
+} from "./ColumnItemSlice";
 import styled from "@emotion/styled";
 import { css } from "@emotion/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -27,7 +27,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { createInfoToast } from "features/toast/ToastSlice";
 import { PRIMARY, TASK_G } from "utils/colors";
-import { IColumn, TasksByColumn, Id, Priority, Label } from "types";
+import { IColumn, ItemsByColumn, Priority, Label, ITask } from "types";
 import {
   selectAllColumns,
   selectColumnsEntities,
@@ -172,9 +172,9 @@ const EditTaskDialog = () => {
   const labels = useSelector(selectAllLabels);
   const labelsById = useSelector(selectLabelEntities);
   const columnsById = useSelector(selectColumnsEntities);
-  const tasksByColumn = useSelector((state: RootState) => state.task.byColumn);
-  const taskId = useSelector((state: RootState) => state.task.editDialogOpen);
-  const tasksById = useSelector((state: RootState) => state.task.byId);
+  const tasksByColumn = useSelector((state: RootState) => state.item.byColumn);
+  const taskId = useSelector((state: RootState) => state.item.editDialogOpen);
+  const tasksById = useSelector((state: RootState) => state.item.byId);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [editingDescription, setEditingDescription] = useState(false);
@@ -187,27 +187,29 @@ const EditTaskDialog = () => {
 
   useEffect(() => {
     if (taskId && tasksById[taskId]) {
-      setDescription(tasksById[taskId].description);
-      setTitle(tasksById[taskId].title);
+      setDescription((tasksById[taskId] as ITask).description);
+      setTitle((tasksById[taskId] as ITask).title);
     }
   }, [open, taskId]);
 
   const handleSaveTitle = () => {
     if (taskId) {
-      dispatch(patchTask({ id: taskId, fields: { title } }));
+      const id = Number(taskId.substring(1));
+      dispatch(patchTask({ id: id, fields: { title } }));
     }
   };
 
   const handleSaveDescription = () => {
     if (taskId) {
-      dispatch(patchTask({ id: taskId, fields: { description } }));
+      const id = Number(taskId.substring(1));
+      dispatch(patchTask({ id: id, fields: { description } }));
       setEditingDescription(false);
     }
   };
 
   const handleCancelDescription = () => {
     if (taskId && tasksById[taskId]) {
-      setDescription(tasksById[taskId].description);
+      setDescription((tasksById[taskId] as ITask).description);
       setEditingDescription(false);
     }
   };
@@ -256,7 +258,7 @@ const EditTaskDialog = () => {
     return null;
   }
 
-  const task = tasksById[taskId];
+  const task = tasksById[taskId] as ITask;
   const column = columnsById[columnId];
 
   const handleEditorKeyDown = (e: React.KeyboardEvent) => {
@@ -294,8 +296,8 @@ const EditTaskDialog = () => {
     if (!column || !value || column.id === value.id) {
       return;
     }
-    const current: Id[] = [...tasksByColumn[column.id]];
-    const next: Id[] = [...tasksByColumn[value.id]];
+    const current: string[] = [...tasksByColumn[column.id]];
+    const next: string[] = [...tasksByColumn[value.id]];
 
     const currentId = current.indexOf(task.id);
     const newPosition = 0;
@@ -305,7 +307,7 @@ const EditTaskDialog = () => {
     // insert into next
     next.splice(newPosition, 0, task.id);
 
-    const updatedTasksByColumn: TasksByColumn = {
+    const updatedTasksByColumn: ItemsByColumn = {
       ...tasksByColumn,
       [column.id]: current,
       [value.id]: next,
@@ -316,7 +318,8 @@ const EditTaskDialog = () => {
 
   const handlePriorityChange = (_: any, priority: Priority | null) => {
     if (priority) {
-      dispatch(patchTask({ id: taskId, fields: { priority: priority.value } }));
+      const id = Number(taskId.substring(1));
+      dispatch(patchTask({ id: id, fields: { priority: priority.value } }));
     }
   };
 
@@ -326,7 +329,8 @@ const EditTaskDialog = () => {
 
   const handleDelete = () => {
     if (window.confirm("Are you sure? Deleting a task cannot be undone.")) {
-      dispatch(deleteTask(task.id));
+      const id = Number(task.id.substring(1));
+      dispatch(deleteTask(id));
       handleClose();
     }
   };
@@ -340,9 +344,10 @@ const EditTaskDialog = () => {
   };
 
   const handleLabelsChange = (newLabels: Label[]) => {
+    const id = Number(taskId.substring(1));
     dispatch(
       patchTask({
-        id: taskId,
+        id: id,
         fields: { labels: newLabels.map((label) => label.id) },
       })
     );
@@ -459,7 +464,7 @@ const EditTaskDialog = () => {
               </DescriptionActions>
             )}
           </Description>
-          <CommentSection taskId={task.id} />
+          <CommentSection taskId={Number(task.id.substring(1))} />
         </Main>
         <Side theme={theme}>
           <TaskAssignees task={task} />
@@ -514,7 +519,7 @@ const EditTaskDialog = () => {
             options={labels}
             getOptionLabel={(option) => option.name}
             value={
-              tasksById[taskId].labels.map(
+              (tasksById[taskId] as ITask).labels.map(
                 (labelId) => labelsById[labelId]
               ) as Label[]
             }

@@ -15,11 +15,9 @@ import { patchColumn, deleteColumn } from "features/column/ColumnSlice";
 import {
   setCreateDialogColumn,
   setCreateDialogOpen,
-} from "features/task/TaskSlice";
-import {
   setCreateNoteDialogColumn,
   setCreateNoteDialogOpen,
-} from "features/task/NoteSlice";
+} from "features/task/ColumnItemSlice";
 import { css } from "@emotion/core";
 
 const Container = styled.h4`

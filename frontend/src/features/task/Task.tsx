@@ -13,7 +13,7 @@ import { AvatarGroup } from "@material-ui/lab";
 import { css } from "@emotion/core";
 import { useSelector, useDispatch } from "react-redux";
 import { Avatar } from "@material-ui/core";
-import { setEditDialogOpen } from "./TaskSlice";
+import { setEditDialogOpen } from "./ColumnItemSlice";
 import TaskLabels from "./TaskLabels";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp } from "@fortawesome/free-solid-svg-icons";

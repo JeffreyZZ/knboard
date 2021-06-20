@@ -79,7 +79,7 @@ const TaskAssignees = ({ task }: Props) => {
     ) {
       dispatch(
         patchTask({
-          id: task.id,
+          id: Number(task.id),
           fields: { assignees: pendingIds },
         })
       );

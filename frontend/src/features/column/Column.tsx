@@ -8,7 +8,7 @@ import {
   DraggableProvided,
   DraggableStateSnapshot,
 } from "react-beautiful-dnd";
-import { ITask, INote } from "types";
+import { IColumnItem } from "types";
 import { COLUMN_COLOR } from "utils/colors";
 
 const Container = styled.div`
@@ -32,12 +32,11 @@ const Header = styled.div<{ isDragging: boolean }>`
 type Props = {
   id: number;
   title: string;
-  tasks: ITask[];
-  notes: INote[];
+  items: IColumnItem[];
   index: number;
 };
 
-const Column = ({ id, title, tasks, notes, index }: Props) => {
+const Column = ({ id, title, items, index }: Props) => {
   return (
     <Draggable draggableId={`col-${id}`} index={index}>
       {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
@@ -51,18 +50,12 @@ const Column = ({ id, title, tasks, notes, index }: Props) => {
               {...provided.dragHandleProps}
               id={id}
               title={title}
-              tasksCount={tasks.length + notes.length}
+              tasksCount={items.length}
               aria-label={`${title} task list`}
               data-testid="column-title"
             />
           </Header>
-          <TaskList
-            columnId={id}
-            listType="TASK"
-            tasks={tasks}
-            notes={notes}
-            index={index}
-          />
+          <TaskList columnId={id} listType="TASK" items={items} index={index} />
         </Container>
       )}
     </Draggable>

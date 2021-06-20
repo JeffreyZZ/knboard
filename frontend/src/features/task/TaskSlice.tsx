@@ -20,7 +20,7 @@ interface InitialState {
   createLoading: boolean;
   createDialogOpen: boolean;
   createDialogColumn: Id | null;
-  editDialogOpen: Id | null;
+  editDialogOpen: string | null;
 }
 
 export const initialState: InitialState = {
@@ -90,7 +90,7 @@ export const slice = createSlice({
     setCreateDialogColumn: (state, action: PayloadAction<Id>) => {
       state.createDialogColumn = action.payload;
     },
-    setEditDialogOpen: (state, action: PayloadAction<Id | null>) => {
+    setEditDialogOpen: (state, action: PayloadAction<string | null>) => {
       state.editDialogOpen = action.payload;
     },
   },
@@ -102,7 +102,7 @@ export const slice = createSlice({
         for (const task of col.tasks) {
           byId[task.id] = task;
         }
-        byColumn[col.id] = col.tasks.map((t) => t.id);
+        // byColumn[col.id] = col.tasks.map((t) => t.id);
       }
       state.byColumn = byColumn;
       state.byId = byId;
@@ -115,7 +115,7 @@ export const slice = createSlice({
     });
     builder.addCase(createTask.fulfilled, (state, action) => {
       state.byId[action.payload.id] = action.payload;
-      state.byColumn[action.payload.column].push(action.payload.id);
+      // state.byColumn[action.payload.column].push(action.payload.id);
       state.createDialogOpen = false;
       state.createLoading = false;
     });
@@ -170,7 +170,7 @@ export const updateTasksByColumn = (
   tasksByColumn: TasksByColumn
 ): AppThunk => async (dispatch: AppDispatch, getState: () => RootState) => {
   const state = getState();
-  const previousTasksByColumn = state.task.byColumn;
+  // const previousTasksByColumn = state.item.byColumn;
   const boardId = state.board.detail?.id;
   try {
     dispatch(setTasksByColumn(tasksByColumn));
@@ -180,7 +180,7 @@ export const updateTasksByColumn = (
       order: Object.values(tasksByColumn).flat(),
     });
   } catch (err) {
-    dispatch(setTasksByColumn(previousTasksByColumn));
+    // dispatch(setTasksByColumn(previousTasksByColumn));
     dispatch(createErrorToast(err.toString()));
   }
 };

@@ -17,7 +17,7 @@ import { faRocket } from "@fortawesome/free-solid-svg-icons";
 import MarkdownIt from "markdown-it";
 import MdEditor from "react-markdown-editor-lite";
 
-import { setCreateDialogOpen, createTask } from "./TaskSlice";
+import { setCreateDialogOpen, createTask } from "./ColumnItemSlice";
 import { PRIMARY } from "utils/colors";
 import {
   PRIORITY_OPTIONS,
@@ -69,12 +69,12 @@ const CreateTaskDialog = () => {
   const dispatch = useDispatch();
   const labelsOptions = useSelector(selectAllLabels);
   const members = useSelector(selectAllMembers);
-  const open = useSelector((state: RootState) => state.task.createDialogOpen);
+  const open = useSelector((state: RootState) => state.item.createDialogOpen);
   const columnId = useSelector(
-    (state: RootState) => state.task.createDialogColumn
+    (state: RootState) => state.item.createDialogColumn
   );
   const createLoading = useSelector(
-    (state: RootState) => state.task.createLoading
+    (state: RootState) => state.item.createLoading
   );
   const [titleTouched, setTitleTouched] = useState<boolean>(false);
   const [title, setTitle] = useState<string>("");

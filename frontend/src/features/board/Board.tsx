@@ -13,8 +13,6 @@ import reorder, { reorderTasks } from "utils/reorder";
 import { reorderNotes } from "utils/reorderNotes";
 import { RootState } from "store";
 import { useSelector, useDispatch } from "react-redux";
-import { updateTasksByColumn } from "features/task/TaskSlice";
-import { updateNotesByColumn } from "features/task/NoteSlice";
 import { updateColumns, columnSelectors } from "features/column/ColumnSlice";
 import { useParams } from "react-router-dom";
 import { fetchBoardById } from "./BoardSlice";
@@ -60,10 +58,8 @@ const Board = () => {
   const detail = useSelector((state: RootState) => state.board.detail);
   const error = useSelector((state: RootState) => state.board.detailError);
   const columns = useSelector(columnSelectors.selectAll);
-  const tasksByColumn = useSelector((state: RootState) => state.task.byColumn);
-  const tasksById = useSelector((state: RootState) => state.task.byId);
-  const notesByColumn = useSelector((state: RootState) => state.note.byColumn);
-  const notesById = useSelector((state: RootState) => state.note.byId);
+  const itemsByColumn = useSelector((state: RootState) => state.item.byColumn);
+  const itemsById = useSelector((state: RootState) => state.item.byId);
   const dispatch = useDispatch();
   const { id } = useParams();
 
@@ -102,21 +98,21 @@ const Board = () => {
     }
 
     //  reordering task and note
-    if (result.draggableId.startsWith("note")) {
-      const data = reorderNotes({
-        notesByColumn,
-        source,
-        destination,
-      });
-      dispatch(updateNotesByColumn(data.notesByColumn));
-    } else {
-      const data = reorderTasks({
-        tasksByColumn,
-        source,
-        destination,
-      });
-      dispatch(updateTasksByColumn(data.tasksByColumn));
-    }
+    // if (result.draggableId.startsWith("note")) {
+    //   const data = reorderNotes({
+    //     itemsByColumn,
+    //     source,
+    //     destination,
+    //   });
+    //   dispatch(updateNotesByColumn(data.notesByColumn));
+    // } else {
+    //   const data = reorderTasks({
+    //     itemsByColumn,
+    //     source,
+    //     destination,
+    //   });
+    //   dispatch(updateTasksByColumn(data.tasksByColumn));
+    // }
   };
 
   const detailDataExists = detail?.id.toString() === id;
@@ -152,11 +148,8 @@ const Board = () => {
                         id={column.id}
                         title={column.title}
                         index={index}
-                        tasks={tasksByColumn[column.id].map(
-                          (taskId) => tasksById[taskId]
-                        )}
-                        notes={notesByColumn[column.id].map(
-                          (noteId) => notesById[noteId]
+                        items={itemsByColumn[column.id].map(
+                          (itemId) => itemsById[itemId]
                         )}
                       />
                     ))}

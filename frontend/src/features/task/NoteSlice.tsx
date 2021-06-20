@@ -98,7 +98,7 @@ export const slice = createSlice({
         for (const note of col.notes) {
           byId[note.id] = note;
         }
-        byColumn[col.id] = col.notes.map((t) => t.id);
+        //byColumn[col.id] = col.notes.map((t) => t.id);
       }
       state.byColumn = byColumn;
       state.byId = byId;
@@ -111,7 +111,7 @@ export const slice = createSlice({
     });
     builder.addCase(createNote.fulfilled, (state, action) => {
       state.byId[action.payload.id] = action.payload;
-      state.byColumn[action.payload.column].push(action.payload.id);
+      //state.byColumn[action.payload.column].push(action.payload.id);
       state.createNoteDialogOpen = false;
       state.createLoading = false;
     });
@@ -153,11 +153,11 @@ export const {
   setEditNoteDialogOpen,
 } = slice.actions;
 
-export const updateNotesByColumn = (
+export const updateNotesTasksByColumn = (
   notesByColumn: NotesByColumn
 ): AppThunk => async (dispatch: AppDispatch, getState: () => RootState) => {
   const state = getState();
-  const previousNotesByColumn = state.note.byColumn;
+  // const previousNotesByColumn = state.item.byColumn;
   const boardId = state.board.detail?.id;
   try {
     dispatch(setNotesByColumn(notesByColumn));
@@ -167,7 +167,7 @@ export const updateNotesByColumn = (
       order: Object.values(notesByColumn).flat(),
     });
   } catch (err) {
-    dispatch(setNotesByColumn(previousNotesByColumn));
+    // dispatch(setNotesByColumn(previousNotesByColumn));
     dispatch(createErrorToast(err.toString()));
   }
 };

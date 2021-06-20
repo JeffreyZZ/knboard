@@ -14,14 +14,14 @@ import {
   deleteNote,
   updateNotesByColumn,
   patchNote,
-} from "./NoteSlice";
+} from "./ColumnItemSlice";
 import styled from "@emotion/styled";
 import { css } from "@emotion/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faAlignLeft } from "@fortawesome/free-solid-svg-icons";
 import { createInfoToast } from "features/toast/ToastSlice";
 import { PRIMARY, TASK_G } from "utils/colors";
-import { IColumn, TasksByColumn, Id, Label } from "types";
+import { IColumn, ItemsByColumn, Label, INote } from "types";
 import {
   selectAllColumns,
   selectColumnsEntities,
@@ -138,11 +138,11 @@ const EditNoteDialog = () => {
   const labels = useSelector(selectAllLabels);
   const labelsById = useSelector(selectLabelEntities);
   const columnsById = useSelector(selectColumnsEntities);
-  const notesByColumn = useSelector((state: RootState) => state.note.byColumn);
+  const itemsByColumn = useSelector((state: RootState) => state.item.byColumn);
   const noteId = useSelector(
-    (state: RootState) => state.note.editNoteDialogOpen
+    (state: RootState) => state.item.editNoteDialogOpen
   );
-  const notesById = useSelector((state: RootState) => state.note.byId);
+  const itemsById = useSelector((state: RootState) => state.item.byId);
   const [description, setDescription] = useState("");
   const [editingDescription, setEditingDescription] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -152,21 +152,22 @@ const EditNoteDialog = () => {
   const open = noteId !== null;
 
   useEffect(() => {
-    if (noteId && notesById[noteId]) {
-      setDescription(notesById[noteId].description);
+    if (noteId && itemsById[noteId]) {
+      setDescription((itemsById[noteId] as INote).description);
     }
   }, [open, noteId]);
 
   const handleSaveDescription = () => {
     if (noteId) {
-      dispatch(patchNote({ id: noteId, fields: { description } }));
+      const id = Number(noteId.substring(1));
+      dispatch(patchNote({ id: id, fields: { description } }));
       setEditingDescription(false);
     }
   };
 
   const handleCancelDescription = () => {
-    if (noteId && notesById[noteId]) {
-      setDescription(notesById[noteId].description);
+    if (noteId && itemsById[noteId]) {
+      setDescription((itemsById[noteId] as INote).description);
       setEditingDescription(false);
     }
   };
@@ -199,8 +200,8 @@ const EditNoteDialog = () => {
   }, [editingDescription]);
 
   const findTaskColumnId = () => {
-    for (const columnId in notesByColumn) {
-      for (const id of notesByColumn[columnId]) {
+    for (const columnId in itemsByColumn) {
+      for (const id of itemsByColumn[columnId]) {
         if (id === noteId) {
           return columnId;
         }
@@ -211,11 +212,11 @@ const EditNoteDialog = () => {
 
   const columnId = findTaskColumnId();
 
-  if (!noteId || !notesById[noteId] || !columnId) {
+  if (!noteId || !itemsById[noteId] || !columnId) {
     return null;
   }
 
-  const task = notesById[noteId];
+  const note = itemsById[noteId] as INote;
   const column = columnsById[columnId];
 
   const handleEditorKeyDown = (e: React.KeyboardEvent) => {
@@ -238,19 +239,19 @@ const EditNoteDialog = () => {
     if (!column || !value || column.id === value.id) {
       return;
     }
-    const current: Id[] = [...notesByColumn[column.id]];
-    const next: Id[] = [...notesByColumn[value.id]];
+    const current: string[] = [...itemsByColumn[column.id]];
+    const next: string[] = [...itemsByColumn[value.id]];
 
-    const currentId = current.indexOf(task.id);
+    const currentId = current.indexOf(note.id);
     const newPosition = 0;
 
     // remove from original
     current.splice(currentId, 1);
     // insert into next
-    next.splice(newPosition, 0, task.id);
+    next.splice(newPosition, 0, note.id);
 
-    const updatedNotesByColumn: TasksByColumn = {
-      ...notesByColumn,
+    const updatedNotesByColumn: ItemsByColumn = {
+      ...itemsByColumn,
       [column.id]: current,
       [value.id]: next,
     };
@@ -264,7 +265,8 @@ const EditNoteDialog = () => {
 
   const handleDelete = () => {
     if (window.confirm("Are you sure? Deleting a task cannot be undone.")) {
-      dispatch(deleteNote(task.id));
+      const id = Number(note.id.substring(1));
+      dispatch(deleteNote(id));
       handleClose();
     }
   };
@@ -278,9 +280,10 @@ const EditNoteDialog = () => {
   };
 
   const handleLabelsChange = (newLabels: Label[]) => {
+    const id = Number(noteId.substring(1));
     dispatch(
       patchNote({
-        id: noteId,
+        id: id,
         fields: { labels: newLabels.map((label) => label.id) },
       })
     );
@@ -326,7 +329,7 @@ const EditNoteDialog = () => {
       <Content theme={theme}>
         <Close onClose={handleClose} />
         <Main>
-          <Header>id: {task.id}</Header>
+          <Header>id: {note.id}</Header>
           <DescriptionHeader>
             <FontAwesomeIcon icon={faAlignLeft} />
             <h3>Description</h3>
@@ -418,7 +421,7 @@ const EditNoteDialog = () => {
             options={labels}
             getOptionLabel={(option) => option.name}
             value={
-              notesById[noteId].labels.map(
+              (itemsById[noteId] as INote).labels.map(
                 (labelId) => labelsById[labelId]
               ) as Label[]
             }
@@ -460,14 +463,14 @@ const EditNoteDialog = () => {
             </Button>
           </ButtonsContainer>
           <Text>
-            Updated {formatDistanceToNow(new Date(task.modified))} ago
+            Updated {formatDistanceToNow(new Date(note.modified))} ago
           </Text>
           <Text
             css={css`
               margin-bottom: 1rem;
             `}
           >
-            Created {formatDistanceToNow(new Date(task.created))} ago
+            Created {formatDistanceToNow(new Date(note.created))} ago
           </Text>
         </Side>
       </Content>

@@ -9,7 +9,7 @@ import {
 import { N30, N70, PRIMARY, Y50 } from "utils/colors";
 import { taskContainerStyles } from "styles";
 import { useDispatch } from "react-redux";
-import { setEditNoteDialogOpen } from "./NoteSlice";
+import { setEditNoteDialogOpen } from "./ColumnItemSlice";
 import TaskLabels from "./TaskLabels";
 
 const getBackgroundColor = (isDragging: boolean, isGroupedOver: boolean) => {

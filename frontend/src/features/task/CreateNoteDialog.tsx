@@ -17,7 +17,7 @@ import { faRocket } from "@fortawesome/free-solid-svg-icons";
 import MarkdownIt from "markdown-it";
 import MdEditor from "react-markdown-editor-lite";
 
-import { setCreateNoteDialogOpen, createNote } from "./NoteSlice";
+import { setCreateNoteDialogOpen, createNote } from "./ColumnItemSlice";
 import { PRIMARY } from "utils/colors";
 import { MD_EDITOR_PLUGINS, MD_EDITOR_CONFIG, Key } from "const";
 import { Label } from "types";
@@ -59,13 +59,13 @@ const CreateNoteDialog = () => {
   const dispatch = useDispatch();
   const labelsOptions = useSelector(selectAllLabels);
   const open = useSelector(
-    (state: RootState) => state.note.createNoteDialogOpen
+    (state: RootState) => state.item.createNoteDialogOpen
   );
   const columnId = useSelector(
-    (state: RootState) => state.note.createNoteDialogColumn
+    (state: RootState) => state.item.createNoteDialogColumn
   );
   const createLoading = useSelector(
-    (state: RootState) => state.note.createLoading
+    (state: RootState) => state.item.createLoading
   );
   const [description, setDescription] = useState<string>("");
   const [labels, setLabels] = useState<Label[]>([]);

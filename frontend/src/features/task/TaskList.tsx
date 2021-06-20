@@ -2,7 +2,7 @@ import React from "react";
 import styled from "@emotion/styled";
 import { R50, T50, COLUMN_COLOR } from "utils/colors";
 import { grid, barHeight, taskWidth } from "const";
-import { ITask, INote } from "types";
+import { IColumnItem, ITask, INote } from "types";
 import {
   DroppableProvided,
   DroppableStateSnapshot,
@@ -12,6 +12,7 @@ import Task from "./Task";
 import Note from "./Note";
 import AddTask from "./AddTask";
 import { css } from "@emotion/core";
+import { count } from "console";
 
 export const getBackgroundColor = (
   isDraggingOver: boolean,
@@ -59,80 +60,40 @@ const Container = styled.div``;
 interface Props {
   columnId: number;
   listType: string;
-  tasks: ITask[];
-  notes: INote[];
+  items: IColumnItem[];
   index: number;
 }
 
 interface TaskListProps {
-  tasks: ITask[];
-  notes: INote[];
+  items: IColumnItem[];
 }
 
-const InnerTaskList = ({ tasks, notes }: TaskListProps) => {
+const InnerTaskList = ({ items }: TaskListProps) => {
   const sections = [];
-  let taskIndex = 0;
-  let noteIndex = 0;
-  let indexInCol = 0;
 
-  while (taskIndex < tasks.length && noteIndex < notes.length) {
-    if (tasks[taskIndex].task_order <= notes[noteIndex].task_order) {
-      sections.push(
-        <Task
-          key={tasks[taskIndex].id}
-          task={tasks[taskIndex]}
-          index={indexInCol++}
-        />
-      );
-      taskIndex++;
+  for (let counter = 0; counter < items.length; counter++) {
+    if (items[counter].id.startsWith("T")) {
+      const task = items[counter] as ITask;
+      sections.push(<Task key={task.id} task={task} index={counter} />);
     } else {
-      sections.push(
-        <Note
-          key={notes[noteIndex].id}
-          note={notes[noteIndex]}
-          index={indexInCol++}
-        />
-      );
-      noteIndex++;
+      const note = items[counter] as INote;
+      sections.push(<Note key={note.id} note={note} index={counter} />);
     }
   }
 
-  while (taskIndex < tasks.length) {
-    sections.push(
-      <Task
-        key={tasks[taskIndex].id}
-        task={tasks[taskIndex]}
-        index={indexInCol++}
-      />
-    );
-    taskIndex++;
-  }
-
-  while (noteIndex < notes.length) {
-    sections.push(
-      <Note
-        key={notes[noteIndex].id}
-        note={notes[noteIndex]}
-        index={indexInCol++}
-      />
-    );
-    noteIndex++;
-  }
   return <>{sections}</>;
 };
 
 interface InnerListProps {
   dropProvided: DroppableProvided;
   columnId: number;
-  tasks: ITask[];
-  notes: INote[];
+  items: IColumnItem[];
   index: number;
 }
 
 const InnerList = ({
   columnId,
-  tasks,
-  notes,
+  items,
   dropProvided,
   index,
 }: InnerListProps) => (
@@ -145,20 +106,14 @@ const InnerList = ({
         overflow-y: scroll;
       `}
     >
-      <InnerTaskList tasks={tasks} notes={notes} />
+      <InnerTaskList items={items} />
       {dropProvided.placeholder}
     </DropZone>
     <AddTask columnId={columnId} index={index} />
   </Container>
 );
 
-const TaskList = ({
-  columnId,
-  listType,
-  tasks: tasks,
-  notes: notes,
-  index,
-}: Props) => (
+const TaskList = ({ columnId, listType, items: items, index }: Props) => (
   <Droppable droppableId={columnId.toString()} type={listType}>
     {(
       dropProvided: DroppableProvided,
@@ -171,8 +126,7 @@ const TaskList = ({
       >
         <InnerList
           columnId={columnId}
-          tasks={tasks}
-          notes={notes}
+          items={items}
           dropProvided={dropProvided}
           index={index}
         />
