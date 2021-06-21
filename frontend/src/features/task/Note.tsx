@@ -6,8 +6,8 @@ import {
   Draggable,
   DraggableStateSnapshot,
 } from "react-beautiful-dnd";
-import { N30, N70, PRIMARY, Y50 } from "utils/colors";
-import { taskContainerStyles } from "styles";
+import { N30, N70, PRIMARY, Y75 } from "utils/colors";
+import { noteContainerStyles } from "styles";
 import { useDispatch } from "react-redux";
 import { setEditNoteDialogOpen } from "./ColumnItemSlice";
 import TaskLabels from "./TaskLabels";
@@ -21,7 +21,7 @@ const getBackgroundColor = (isDragging: boolean, isGroupedOver: boolean) => {
     return N30;
   }
 
-  return Y50;
+  return Y75;
 };
 
 const getBorderColor = (isDragging: boolean) =>
@@ -114,7 +114,7 @@ const Note = ({ note: note, style, index }: Props) => {
           data-index={index}
           aria-label={`note ${note.description}`}
           onClick={handleClick}
-          css={taskContainerStyles}
+          css={noteContainerStyles}
         >
           <Content>
             <TextContent>{note.description}</TextContent>

@@ -1,6 +1,6 @@
 import { css } from "@emotion/core";
 import { borderRadius, imageSize, grid } from "const";
-import { N900 } from "utils/colors";
+import { N900, Y100 } from "utils/colors";
 
 export const boardCardBaseStyles = css`
   position: relative;
@@ -46,6 +46,34 @@ export const taskContainerStyles = css`
   &:active {
     color: ${N900};
     background-color: #f5f5f5;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
+  /* flexbox */
+  display: flex;
+`;
+
+export const noteContainerStyles = css`
+  border-radius: ${borderRadius}px;
+  border: 2px solid transparent;
+  box-shadow: 0 1px 2px rgba(10, 30, 60, 0.25);
+  box-sizing: border-box;
+  padding: ${grid}px;
+  min-height: ${imageSize}px;
+  margin-bottom: ${grid}px;
+  user-select: none;
+  color: ${N900};
+
+  &:hover,
+  &:active {
+    color: ${N900};
+    background-color: ${Y100};
     text-decoration: none;
     cursor: pointer;
   }
