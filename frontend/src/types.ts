@@ -64,6 +64,15 @@ export interface NewTask
   column: Id;
 }
 
+export interface OrderedItem {
+  id: string;
+  order: number;
+}
+
+export interface OrderedItemsByColumn {
+  [key: string]: OrderedItem[];
+}
+
 export interface ItemsByColumn {
   [key: string]: string[];
 }

@@ -1,5 +1,7 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import {
+  OrderedItemsByColumn,
+  OrderedItem,
   ItemsByColumn,
   IColumnItem,
   ITask,
@@ -310,25 +312,45 @@ export const updateItemsByColumn = (
   let notesNeedUpdate = false;
   let tasksNeedUpdate = false;
 
-  const notesByColumn: ItemsByColumn = {};
+  const notesByColumn: OrderedItemsByColumn = {};
   for (const columnId in itemsByColumn) {
-    const notes = itemsByColumn[columnId]
-      .filter((i) => i.startsWith("N"))
-      .map((i) => i.substring(1));
-    if (notes.length > 0) {
+    for (let i = 0; i < itemsByColumn[columnId].length; i++) {
+      if (itemsByColumn[columnId][i].startsWith("N")) {
+        const note: OrderedItem = {
+          id: itemsByColumn[columnId][i].substring(1),
+          order: i,
+        };
+
+        if (notesByColumn[columnId] == null) {
+          notesByColumn[columnId] = [];
+        }
+        notesByColumn[columnId].push(note);
+      }
+    }
+
+    if (notesByColumn[columnId] && notesByColumn[columnId].length > 0) {
       notesNeedUpdate = true;
-      notesByColumn[columnId] = notes;
     }
   }
 
-  const tasksByColumn: ItemsByColumn = {};
+  const tasksByColumn: OrderedItemsByColumn = {};
   for (const columnId in itemsByColumn) {
-    const tasks = itemsByColumn[columnId]
-      .filter((i) => i.startsWith("T"))
-      .map((i) => i.substring(1));
-    if (tasks.length > 0) {
+    for (let i = 0; i < itemsByColumn[columnId].length; i++) {
+      if (itemsByColumn[columnId][i].startsWith("T")) {
+        const task: OrderedItem = {
+          id: itemsByColumn[columnId][i].substring(1),
+          order: i,
+        };
+
+        if (tasksByColumn[columnId] == null) {
+          tasksByColumn[columnId] = [];
+        }
+        tasksByColumn[columnId].push(task);
+      }
+    }
+
+    if (tasksByColumn[columnId] && tasksByColumn[columnId].length > 0) {
       tasksNeedUpdate = true;
-      tasksByColumn[columnId] = tasks;
     }
   }
 

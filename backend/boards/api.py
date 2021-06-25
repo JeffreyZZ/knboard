@@ -2,6 +2,7 @@ from itertools import chain
 
 from django.contrib.auth import get_user_model
 from django.db import transaction
+from django.db.models.expressions import Value
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import mixins, viewsets
 from rest_framework import filters
@@ -223,11 +224,18 @@ class SortTask(APIView):
 
         # Check for duplicate tasks
         flat_tasks = list(chain.from_iterable(tasks_by_column.values()))
-        if len(flat_tasks) != len(set(flat_tasks)):
+        flat_tasks_ids = []
+        for note in flat_tasks:
+            flat_tasks_ids.append(note['id'])
+
+        if len(flat_tasks_ids) != len(set(flat_tasks_ids)):
             raise ValueError
 
-        for column_name, task_ids in tasks_by_column.items():
+        for column_name, tasks in tasks_by_column.items():
             column = pre_columns.get(id=column_name)
+            task_ids = []
+            for note in tasks:
+               task_ids.append(note['id'])
             tasks = pre_tasks.filter(pk__in=task_ids)
             tasks.update(column=column)
 
@@ -235,7 +243,7 @@ class SortTask(APIView):
         try:
             with transaction.atomic():
                 self.move_tasks(request)
-                return sort_model(request, Task)
+                return sort_model(request, Task, "tasks")
         except (
             KeyError,
             IndexError,
@@ -261,11 +269,18 @@ class SortNote(APIView):
 
         # Check for duplicate notes
         flat_notes = list(chain.from_iterable(notes_by_column.values()))
-        if len(flat_notes) != len(set(flat_notes)):
+        flat_notes_ids = []
+        for note in flat_notes:
+            flat_notes_ids.append(note['id'])
+
+        if len(flat_notes_ids) != len(set(flat_notes_ids)):
             raise ValueError
 
-        for column_name, note_ids in notes_by_column.items():
+        for column_name, notes in notes_by_column.items():
             column = pre_columns.get(id=column_name)
+            note_ids = []
+            for note in notes:
+               note_ids.append(note['id'])
             notes = pre_notes.filter(pk__in=note_ids)
             notes.update(column=column)
 
@@ -273,7 +288,7 @@ class SortNote(APIView):
         try:
             with transaction.atomic():
                 self.move_notes(request)
-                return sort_model(request, Note)
+                return sort_model(request, Note, "notes")
         except (
             KeyError,
             IndexError,
@@ -285,33 +300,32 @@ class SortNote(APIView):
             return Response(status=HTTP_400_BAD_REQUEST)
 
 
-def sort_model(request, Model):
-    ordered_pks = request.data.get("order", [])
+def sort_model(request, Model, table):
+    col_orderd_pks = request.data.get(table, [])
+    
+    for key, value in col_orderd_pks.items():
+        ordered_pks = value
+        
+        ordered_pks_ids = []
+        for item in ordered_pks:
+            ordered_pks_ids.append(item["id"])
 
-    # Check for duplicates
-    if len(ordered_pks) != len(set(ordered_pks)):
-        return Response(status=HTTP_400_BAD_REQUEST)
+        # Check for duplicates
+        if len(ordered_pks_ids) != len(set(ordered_pks_ids)):
+            return Response(status=HTTP_400_BAD_REQUEST)
 
-    objects_dict = dict(
-        [(str(obj.pk), obj) for obj in Model.objects.filter(pk__in=ordered_pks)]
-    )
-    order_field_name = Model._meta.ordering[0]
+        objects_dict = dict(
+            [(str(obj.pk), obj) for obj in Model.objects.filter(pk__in=ordered_pks_ids)]
+        )
+        order_field_name = Model._meta.ordering[0]
 
-    step = 1
-    start_object = min(
-        objects_dict.values(), key=lambda x: getattr(x, order_field_name)
-    )
-    start_index = getattr(start_object, order_field_name, len(ordered_pks))
+        for pk in ordered_pks:
+            obj = objects_dict.get(str(pk["id"]))
 
-    for pk in ordered_pks:
-        obj = objects_dict.get(str(pk))
-
-        # perform the update only if the order field has changed
-        if getattr(obj, order_field_name) != start_index:
-            setattr(obj, order_field_name, start_index)
-            # only update the object's order field
-            obj.save(update_fields=[order_field_name])
-
-        start_index += step
+            # perform the update only if the order field has changed
+            if getattr(obj, order_field_name) != pk["order"]:
+                setattr(obj, order_field_name, pk["order"])
+                # only update the object's order field
+                obj.save(update_fields=[order_field_name])
 
     return Response(status=HTTP_200_OK)
