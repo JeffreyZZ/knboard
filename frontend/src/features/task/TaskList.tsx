@@ -10,7 +10,6 @@ import {
 } from "react-beautiful-dnd";
 import Task from "./Task";
 import Note from "./Note";
-import AddTask from "./AddTask";
 import { css } from "@emotion/core";
 
 export const getBackgroundColor = (
@@ -85,34 +84,26 @@ const InnerTaskList = ({ items }: TaskListProps) => {
 
 interface InnerListProps {
   dropProvided: DroppableProvided;
-  columnId: number;
   items: IColumnItem[];
-  index: number;
 }
 
-const InnerList = ({
-  columnId,
-  items,
-  dropProvided,
-  index,
-}: InnerListProps) => (
+const InnerList = ({ items, dropProvided }: InnerListProps) => (
   <Container>
     <DropZone
       data-testid="drop-zone"
       ref={dropProvided.innerRef}
       css={css`
         max-height: calc(100vh - ${barHeight * 5}px);
-        overflow-y: scroll;
+        overflow-y: auto; /* overflow: auto: show scrollbars if there is any content in the overflow */
       `}
     >
       <InnerTaskList items={items} />
       {dropProvided.placeholder}
     </DropZone>
-    <AddTask columnId={columnId} index={index} />
   </Container>
 );
 
-const TaskList = ({ columnId, listType, items: items, index }: Props) => (
+const TaskList = ({ columnId, listType, items: items }: Props) => (
   <Droppable droppableId={columnId.toString()} type={listType}>
     {(
       dropProvided: DroppableProvided,
@@ -123,12 +114,7 @@ const TaskList = ({ columnId, listType, items: items, index }: Props) => (
         isDraggingFrom={Boolean(dropSnapshot.draggingFromThisWith)}
         {...dropProvided.droppableProps}
       >
-        <InnerList
-          columnId={columnId}
-          items={items}
-          dropProvided={dropProvided}
-          index={index}
-        />
+        <InnerList items={items} dropProvided={dropProvided} />
       </Wrapper>
     )}
   </Droppable>
