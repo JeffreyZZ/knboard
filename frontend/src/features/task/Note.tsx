@@ -1,4 +1,5 @@
 import React from "react";
+import { WithTheme } from "@material-ui/core";
 import styled from "@emotion/styled";
 import { INote, ITask } from "types";
 import {
@@ -6,11 +7,14 @@ import {
   Draggable,
   DraggableStateSnapshot,
 } from "react-beautiful-dnd";
-import { N30, N70, PRIMARY, Y75 } from "utils/colors";
+import { N30, N70, Y75 } from "utils/colors";
 import { noteContainerStyles } from "styles";
 import { useDispatch } from "react-redux";
 import { setEditNoteDialogOpen } from "./ColumnItemSlice";
 import TaskLabels from "./TaskLabels";
+import MarkdownIt from "markdown-it";
+import MdEditor from "react-markdown-editor-lite";
+import { MD_EDITOR_PLUGINS, MD_READ_ONLY_CONFIG } from "const";
 
 const getBackgroundColor = (isDragging: boolean, isGroupedOver: boolean) => {
   if (isDragging) {
@@ -50,15 +54,6 @@ export const Content = styled.div`
   width: 100%;
 `;
 
-const TextContent = styled.div`
-  position: relative;
-  padding-right: 14px;
-  word-break: break-word;
-  color: ${PRIMARY};
-  font-weight: bold;
-  font-size: 12px;
-`;
-
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const TaskId = styled.small`
   flex-grow: 1;
@@ -70,6 +65,40 @@ const TaskId = styled.small`
   font-weight: bold;
   color: #aaa;
   font-size: 8px;
+`;
+
+const mdParser = new MarkdownIt({ breaks: true });
+
+// The following link provides a good reference on how to configure mdEditor.
+// https://github.com/HarryChen0506/react-markdown-editor-lite/blob/master/src/editor/index.less
+const EditorWrapper = styled.div<WithTheme & { editing: boolean }>`
+  font-weight: normal;
+  font-size: 8px;
+
+  .rc-md-editor {
+    background-color: transparent;
+    border: none;
+    display: flex;
+    .section-container {
+      padding: 0;
+      width: 100%;
+      font-size: 8px;
+    }
+    .sec-html {
+      .html-wrap {
+        padding: 0;
+        font-size: 8px;
+      }
+    }
+    .custom-html-style {
+      p {
+        /*Note line height and font size*/
+        font-size: 13px;
+        line-height: 1.5;
+        margin: 8px 0;
+      }
+    }
+  }
 `;
 
 const getStyle = (provided: DraggableProvided, style?: Record<string, any>) => {
@@ -117,7 +146,14 @@ const Note = ({ note: note, style, index }: Props) => {
           css={noteContainerStyles}
         >
           <Content>
-            <TextContent>{note.description}</TextContent>
+            <EditorWrapper editing={false}>
+              <MdEditor
+                plugins={MD_EDITOR_PLUGINS}
+                config={MD_READ_ONLY_CONFIG}
+                value={note.description}
+                renderHTML={(text) => mdParser.render(text)}
+              />
+            </EditorWrapper>
             <TaskId>id: {note.id}</TaskId>
             <TaskLabels task={note as ITask} />
           </Content>
