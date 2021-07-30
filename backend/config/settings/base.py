@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     "boards",
     "adminsortable",
     "rest_framework",
-    "rest_framework.authtoken",
+    # "rest_framework.authtoken",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
@@ -128,11 +128,15 @@ AUTH_USER_MODEL = "accounts.User"
 # Configure django-rest-framework
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework.authentication.TokenAuthentication",
+        "accounts.authentication.ExtendedTokenAuthentication",
         "rest_framework.authentication.SessionAuthentication",
     ),
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
 }
+
+REST_AUTH_TOKEN_MODEL = "accounts.models.Token"
+
+REST_AUTH_TOKEN_CREATOR = "accounts.utils.custom_create_token"
 
 REST_AUTH_SERIALIZERS = {"TOKEN_SERIALIZER": "accounts.serializers.TokenSerializer"}
 

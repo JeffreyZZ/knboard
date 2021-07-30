@@ -1,10 +1,13 @@
+import binascii
 import os
 
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import UnicodeUsernameValidator
 from django.core.validators import MinLengthValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from rest_framework.authtoken.models import Token as AuthToken
 
 
 class Avatar(models.Model):
@@ -32,3 +35,10 @@ class User(AbstractUser):
 
     class Meta:
         ordering = ["-id"]
+
+
+class Token(AuthToken):
+    """
+    The default authorization token model.
+    """
+    updated = models.DateTimeField(_("Updated"), auto_now_add=True)
