@@ -39,6 +39,11 @@ class User(AbstractUser):
 
 class Token(AuthToken):
     """
-    The default authorization token model.
+    The extended authorization token model to be compatible with mdclub
     """
-    updated = models.DateTimeField(_("Updated"), auto_now_add=True)
+    updated = models.DateTimeField(auto_now_add=True)
+    expired = models.DateTimeField(auto_now_add=True)
+    create_time = models.IntegerField(null=True)
+    update_time = models.IntegerField(null=True)
+    expire_time = models.IntegerField(null=True)
+    device = models.CharField(max_length=600,null=True)
