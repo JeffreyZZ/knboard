@@ -140,6 +140,10 @@ REST_AUTH_TOKEN_CREATOR = "accounts.utils.custom_create_token"
 
 REST_AUTH_SERIALIZERS = {"TOKEN_SERIALIZER": "accounts.serializers.TokenSerializer"}
 
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'accounts.serializers.CustomRegisterSerializer'
+}
+
 # For django.contrib.sites
 SITE_ID = 1
 

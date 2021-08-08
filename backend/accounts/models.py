@@ -34,8 +34,6 @@ class User(AbstractUser):
     is_guest = models.BooleanField(default=False)
 
     # exteneded properties to support mdclub
-    create_time = models.IntegerField(null=True)
-    last_login_time = models.IntegerField(null=True)
     answer_count = models.IntegerField(default=0)
     article_count = models.IntegerField(default=0)
     avatar_text = models.CharField(max_length=50,null=True)
@@ -45,6 +43,7 @@ class User(AbstractUser):
     cover = models.CharField(max_length=50,null=True)
     create_ip = models.CharField(max_length=80,null=True)
     create_location = models.CharField(max_length=100,null=True)
+    create_time = models.IntegerField(null=True)
     disable_time = models.IntegerField(null=True)
     followee_count = models.IntegerField(default=0)
     follower_count = models.IntegerField(default=0)
@@ -55,6 +54,7 @@ class User(AbstractUser):
     inbox_unread = models.IntegerField(default=0)
     last_login_ip = models.CharField(max_length=80,null=True) 
     last_login_location = models.CharField(max_length=100,null=True) 
+    last_login_time = models.IntegerField(null=True)
     location = models.CharField(max_length=255,null=True) 
     notification_unread = models.IntegerField(default=0)
     question_count = models.IntegerField(default=0)
