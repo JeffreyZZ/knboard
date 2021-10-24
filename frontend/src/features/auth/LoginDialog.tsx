@@ -16,6 +16,8 @@ import { RootState } from "store";
 import { Alert } from "@material-ui/lab";
 import Close from "components/Close";
 
+import { sha1 } from "utils/hash";
+
 const FormActions = styled.div`
   margin-top: 1rem;
   text-align: right;
@@ -43,6 +45,7 @@ const LoginDialog = () => {
   };
 
   const onSubmit = handleSubmit(({ username, password }) => {
+    password = sha1(password);
     dispatch(login({ username, password }));
   });
 

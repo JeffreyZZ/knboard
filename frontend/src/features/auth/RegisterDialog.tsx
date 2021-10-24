@@ -15,6 +15,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "store";
 import Close from "components/Close";
 
+import { sha1 } from "utils/hash";
+
 const FormActions = styled.div`
   margin-top: 1rem;
   text-align: right;
@@ -54,6 +56,8 @@ const RegisterDialog = () => {
   };
 
   const onSubmit = handleSubmit((fields) => {
+    fields.password1 = sha1(fields.password1);
+    fields.password2 = sha1(fields.password2);
     dispatch(registerUser(fields));
   });
 
