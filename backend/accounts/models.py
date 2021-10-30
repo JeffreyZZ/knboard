@@ -50,7 +50,7 @@ class User(AbstractUser):
     following_article_count = models.IntegerField(default=0)  
     following_question_count = models.IntegerField(default=0) 
     following_topic_count = models.IntegerField(default=0)
-    headline = models.CharField(max_length=40,null=True) 
+    headline = models.CharField(max_length=40,default='') 
     inbox_unread = models.IntegerField(default=0)
     last_login_ip = models.CharField(max_length=80,null=True) 
     last_login_location = models.CharField(max_length=100,null=True) 
