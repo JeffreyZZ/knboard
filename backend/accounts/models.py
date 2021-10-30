@@ -44,7 +44,7 @@ class User(AbstractUser):
     create_ip = models.CharField(max_length=80, null=True)
     create_location = models.CharField(max_length=100, null=True)
     create_time = models.IntegerField(null=True)
-    disable_time = models.IntegerField(null=True)
+    disable_time = models.IntegerField(default=0)
     followee_count = models.IntegerField(default=0)
     follower_count = models.IntegerField(default=0)
     following_article_count = models.IntegerField(default=0)
