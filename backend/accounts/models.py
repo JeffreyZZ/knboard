@@ -40,7 +40,7 @@ class User(AbstractUser):
     bio = models.CharField(max_length=160, default='')
     blog = models.CharField(max_length=255, default='')
     company = models.CharField(max_length=255, default='')
-    cover = models.CharField(max_length=50, null=True)
+    cover = models.CharField(max_length=50, default='')
     create_ip = models.CharField(max_length=80, null=True)
     create_location = models.CharField(max_length=100, null=True)
     create_time = models.IntegerField(null=True)
