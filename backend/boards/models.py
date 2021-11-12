@@ -60,7 +60,7 @@ class Priority(models.TextChoices):
     MEDIUM = "M", "Medium"
     LOW = "L", "Low"
 
-# merge boards_task into mc_question table
+# merge boards_task into question table
 class Task(SortableMixin, TimeStampedModel):
     # mdclub
     question_id = models.BigAutoField(primary_key=True)  # Comment="问题ID"
@@ -94,7 +94,7 @@ class Task(SortableMixin, TimeStampedModel):
         return f"{self.question_id} - {self.title}"
 
     class Meta:
-        db_table = "mc_question"
+        db_table = "question"
         ordering = ["task_order"]
         indexes = [
             models.Index(fields=['user_id', 'create_time', 'update_time', 'vote_count'])
