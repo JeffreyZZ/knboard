@@ -66,10 +66,7 @@ class Priority(models.TextChoices):
 
 # Base class for column item : Task, Note and Question
 class Item(SortableMixin, TimeStampedModel):
-    column = SortableForeignKey(
-        Column, related_name="column", on_delete=models.CASCADE)
-    task_order = models.PositiveIntegerField(
-        default=0, editable=False, db_index=True)
+    task_order = models.PositiveIntegerField(default=0, editable=False, db_index=True)
 
     def __str__(self):
         return f"{self.id} - {self.content_rendered}"
@@ -104,14 +101,12 @@ class Task(Item):
     )
     labels = models.ManyToManyField(Label, related_name="tasks")
     assignees = models.ManyToManyField(User, related_name="tasks")
-    column = SortableForeignKey(
-        Column, related_name="tasks", on_delete=models.CASCADE)
+    column = SortableForeignKey(Column, related_name="tasks", on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.question_id} - {self.title}"
 
     class Meta:
-        db_table = "question"
         ordering = ["task_order"]
         indexes = [
             models.Index(fields=['user_id', 'create_time',
@@ -123,8 +118,7 @@ class Note(Item):
     content_markdown = models.TextField(null=True)  # Comment="原始的正文内容"
     content_rendered = models.TextField(null=True)  # Comment="过滤渲染后的正文内容"
     labels = models.ManyToManyField(Label, related_name="notes")
-    column = SortableForeignKey(
-        Column, related_name="notes", on_delete=models.CASCADE)
+    column = SortableForeignKey(Column, related_name="notes", on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.id} - {self.content_rendered}"
@@ -154,16 +148,16 @@ class Question(Item):
     title = models.CharField(max_length=80)  # Comment="标题"
 
     # knboard
-    priority = models.CharField(
-        max_length=1, choices=Priority.choices, default=Priority.MEDIUM
-    )
+    priority = models.CharField(max_length=1, choices=Priority.choices, default=Priority.MEDIUM)
     labels = models.ManyToManyField(Label, related_name="question")
     assignees = models.ManyToManyField(User, related_name="questions")
+    column = SortableForeignKey(Column, related_name="questions", on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.question_id} - {self.title}"
 
     class Meta:
+        db_table = "question"
         ordering = ["task_order"]
         indexes = [
             models.Index(fields=['user_id', 'create_time',
@@ -172,10 +166,9 @@ class Question(Item):
 
 
 class Comment(TimeStampedModel):
-    task = models.ForeignKey(
-        Task, on_delete=models.CASCADE, related_name="comments")
-    author = models.ForeignKey(
-        User, on_delete=models.PROTECT, related_name="comments")
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="comments")
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="comments")
+    author = models.ForeignKey(User, on_delete=models.PROTECT, related_name="comments")
     text = models.TextField()
 
     class Meta:

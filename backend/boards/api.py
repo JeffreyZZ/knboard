@@ -15,12 +15,13 @@ from rest_framework.viewsets import GenericViewSet
 from django.db.models import Q
 from django.db.models import Prefetch
 
-from .models import Board, Note, Task, Column, Label, Comment
+from .models import Board, Note, Task, Question, Column, Label, Comment
 from .permissions import IsOwner, IsOwnerForDangerousMethods
 from .serializers import (
     BoardSerializer,
     TaskSerializer,
     NoteSerializer,
+    QuestionSerializer,
     ColumnSerializer,
     BoardDetailSerializer,
     MemberSerializer,
@@ -124,6 +125,16 @@ class TaskViewSet(ModelDetailViewSet):
 class NoteViewSet(ModelDetailViewSet):
     queryset = Note.objects.all()
     serializer_class = NoteSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return super().get_queryset().filter(column__board__members=user)
+
+
+class QuestionViewSet(ModelDetailViewSet):
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
@@ -319,6 +330,51 @@ class SortNote(APIView):
             with transaction.atomic():
                 self.move_notes(request)
                 return sort_model(request, Note, "notes")
+        except (
+            KeyError,
+            IndexError,
+            AttributeError,
+            ValueError,
+            Column.DoesNotExist,
+            Task.DoesNotExist,
+        ):
+            return Response(status=HTTP_400_BAD_REQUEST)
+
+
+class SortQuestion(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def move_questions(self, request):
+        questions_by_column = request.data.get("questions")
+        board_id = request.data.get("board")
+        board = Board.objects.get(id=board_id)
+        pre_columns = Column.objects.filter(board=board)
+        pre_questions = Question.objects.filter(column__in=pre_columns).prefetch_related(
+            "columns"
+        )
+
+        # Check for duplicate questions
+        flat_questions = list(chain.from_iterable(questions_by_column.values()))
+        flat_questions_ids = []
+        for note in flat_questions:
+            flat_questions_ids.append(note['id'])
+
+        if len(flat_questions_ids) != len(set(flat_questions_ids)):
+            raise ValueError
+
+        for column_name, questions in questions_by_column.items():
+            column = pre_columns.get(id=column_name)
+            question_ids = []
+            for question in questions:
+               question_ids.append(question['id'])
+            questions = pre_questions.filter(pk__in=question_ids)
+            questions.update(column=column)
+
+    def post(self, request, **kwargs):
+        try:
+            with transaction.atomic():
+                self.move_questions(request)
+                return sort_model(request, Question, "questions")
         except (
             KeyError,
             IndexError,

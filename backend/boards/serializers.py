@@ -5,7 +5,7 @@ from rest_framework import serializers
 from rest_framework.validators import ValidationError
 
 from accounts.serializers import BoardMemberSerializer
-from .models import Board, Note, Task, Column, Label, Comment
+from .models import Board, Note, Question, Task, Column, Label, Comment
 
 User = get_user_model()
 
@@ -135,6 +135,80 @@ class NoteSerializer(serializers.ModelSerializer):
         fields = ["id", "task_order", "column", "description", "labels", "created", "modified"]
 
 
+class QuestionSerializer(serializers.ModelSerializer):
+    column = serializers.PrimaryKeyRelatedField(queryset=Column.objects.all())
+    labels = serializers.PrimaryKeyRelatedField(
+        queryset=Label.objects.all(), many=True, required=False
+    )
+    assignees = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(), many=True, required=False
+    )
+
+    # expose database question_id as id
+    # TODO: need to simplify it later to avoid this conversion.
+    id = serializers.IntegerField(source='question_id', required=False)
+    
+    # explose content_markdown as description
+    # TODO: need to simplify it later to avoid this conversion
+    description = serializers.CharField(source='content_markdown', required=False, allow_blank=True)
+
+    def extra_validation(self, board=None, labels=None, assignees=None, user=None):
+        if labels and board:
+            for label in labels:
+                if label.board != board:
+                    raise serializers.ValidationError(
+                        "Can't set a label that doesn't belong to the board!"
+                    )
+        if assignees and board:
+            for assignee in assignees:
+                if assignee not in board.members.all():
+                    raise serializers.ValidationError(
+                        "Can't assign someone who isn't a board member!"
+                    )
+        if user and user not in board.members.all():
+            raise serializers.ValidationError("Must be a member of the board!")
+
+    def update(self, instance, validated_data):
+        labels = validated_data.get("labels")
+        assignees = validated_data.get("assignees")
+        board = instance.column.board
+        self.extra_validation(board=board, labels=labels, assignees=assignees)
+        return super().update(instance, validated_data)
+
+    # create new task in database
+    def create(self, validated_data):
+        user = self.context["request"].user
+        board = validated_data["column"].board
+        labels = validated_data["labels"]
+        assignees = validated_data["assignees"]
+        self.extra_validation(
+            board=board, labels=labels, assignees=assignees, user=user
+        )
+        
+        validated_data["user_id"] = user.id
+        # TODO : the following two lines are not needed after db merge by replacing created and modified with create_time and update_time.
+        validated_data["create_time"] = datetime.now().timestamp()
+        validated_data["update_time"] = datetime.now().timestamp()
+        # TODO : content_rendered and content_markdown should be used for different purpose.
+        validated_data["content_rendered"] = validated_data['content_markdown']
+        return super().create(validated_data)
+
+    class Meta:
+        model = Question
+        fields = [
+            "id",
+            "created",
+            "modified",
+            "title",
+            "description",
+            "priority",
+            "labels",
+            "assignees",
+            "task_order",
+            "column",
+        ]
+
+
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
@@ -145,10 +219,11 @@ class ColumnSerializer(BoardModelSerializer):
     board = serializers.PrimaryKeyRelatedField(queryset=Board.objects.all())
     tasks = TaskSerializer(many=True, read_only=True)
     notes = NoteSerializer(many=True, read_only=True)
+    questions = QuestionSerializer(many=True, read_only=True)
 
     class Meta:
         model = Column
-        fields = ["id", "title", "tasks", "notes", "column_order", "board"]
+        fields = ["id", "title", "tasks", "notes", "questions", "column_order", "board"]
 
 
 class LabelSerializer(BoardModelSerializer):
