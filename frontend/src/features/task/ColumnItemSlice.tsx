@@ -6,9 +6,11 @@ import {
   IColumnItem,
   ITask,
   INote,
+  IQuestion,
   Id,
   NewTask,
   NewNote,
+  NewQuestion,
   PriorityValue,
 } from "types";
 import { fetchBoardById } from "features/board/BoardSlice";
@@ -18,7 +20,14 @@ import {
   createSuccessToast,
   createInfoToast,
 } from "features/toast/ToastSlice";
-import api, { API_SORT_TASKS, API_TASKS, API_SORT_NOTES, API_NOTES } from "api";
+import api, {
+  API_SORT_TASKS,
+  API_TASKS,
+  API_SORT_NOTES,
+  API_NOTES,
+  API_SORT_QUESTIONS,
+  API_QUESTIONS,
+} from "api";
 import { addColumn, deleteColumn } from "features/column/ColumnSlice";
 import { deleteLabel } from "features/label/LabelSlice";
 import { removeBoardMember } from "features/member/MemberSlice";
@@ -35,6 +44,9 @@ interface InitialState {
   createNoteDialogOpen: boolean;
   createNoteDialogColumn: Id | null;
   editNoteDialogOpen: string | null;
+  createQuestionDialogOpen: boolean;
+  createQuestionDialogColumn: Id | null;
+  editQuestionDialogOpen: string | null;
 }
 
 export const initialState: InitialState = {
@@ -47,6 +59,9 @@ export const initialState: InitialState = {
   createNoteDialogOpen: false,
   createNoteDialogColumn: null,
   editNoteDialogOpen: null,
+  createQuestionDialogOpen: false,
+  createQuestionDialogColumn: null,
+  editQuestionDialogOpen: null,
 };
 
 /////////////////
@@ -78,6 +93,22 @@ export const patchNote = createAsyncThunk<
   { id: Id; fields: Partial<PatchNoteFields> }
 >("note/patchNoteStatus", async ({ id, fields }) => {
   const response = await api.patch(`${API_NOTES}${id}/`, fields);
+  return response.data;
+});
+
+interface PatchQuestionFields {
+  title: string;
+  description: string;
+  priority: PriorityValue;
+  labels: Id[];
+  assignees: Id[];
+}
+
+export const patchQuestion = createAsyncThunk<
+  IQuestion,
+  { id: Id; fields: Partial<PatchQuestionFields> }
+>("question/patchQuestionStatus", async ({ id, fields }) => {
+  const response = await api.patch(`${API_QUESTIONS}${id}/`, fields);
   return response.data;
 });
 
@@ -124,6 +155,29 @@ export const createNote = createAsyncThunk<
   }
 });
 
+interface CreateQuestionResponse extends IQuestion {
+  column: Id;
+}
+
+export const createQuestion = createAsyncThunk<
+  CreateQuestionResponse,
+  NewQuestion,
+  {
+    rejectValue: string;
+  }
+>(
+  "question/createQuestionStatus",
+  async (question, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await api.post(`${API_QUESTIONS}`, question);
+      dispatch(createSuccessToast("Question created"));
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
 /////////////////
 // Delete
 /////////////////
@@ -141,6 +195,15 @@ export const deleteNote = createAsyncThunk<Id, Id>(
   async (id, { dispatch }) => {
     await api.delete(`${API_NOTES}${id}/`);
     dispatch(createInfoToast("Note deleted"));
+    return id;
+  }
+);
+
+export const deleteQuestion = createAsyncThunk<Id, Id>(
+  "question/deleteQuestionStatus",
+  async (id, { dispatch }) => {
+    await api.delete(`${API_QUESTIONS}${id}/`);
+    dispatch(createInfoToast("Question deleted"));
     return id;
   }
 );
@@ -173,6 +236,21 @@ export const slice = createSlice({
     setNotesByColumn: (state, action: PayloadAction<ItemsByColumn>) => {
       state.byColumn = action.payload;
     },
+    setCreateQuestionDialogOpen: (state, action: PayloadAction<boolean>) => {
+      state.createQuestionDialogOpen = action.payload;
+    },
+    setCreateQuestionDialogColumn: (state, action: PayloadAction<Id>) => {
+      state.createQuestionDialogColumn = action.payload;
+    },
+    setEditQuestionDialogOpen: (
+      state,
+      action: PayloadAction<string | null>
+    ) => {
+      state.editQuestionDialogOpen = action.payload;
+    },
+    setQuestionsByColumn: (state, action: PayloadAction<ItemsByColumn>) => {
+      state.byColumn = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchBoardById.fulfilled, (state, action) => {
@@ -190,6 +268,11 @@ export const slice = createSlice({
           note.id = "N" + note.id;
           byId[note.id] = note;
         }
+        for (const question of col.questions) {
+          question.id = "Q" + question.id;
+          byId[question.id] = question;
+        }
+
         // byColumn
         if (!byColumn[col.id]) {
           byColumn[col.id] = [];
@@ -197,6 +280,7 @@ export const slice = createSlice({
         sortedItemInColumn = [];
         col.tasks.map((t) => sortedItemInColumn.push(t as IColumnItem));
         col.notes.map((n) => sortedItemInColumn.push(n as IColumnItem));
+        col.questions.map((q) => sortedItemInColumn.push(q as IColumnItem));
         byColumn[col.id] = sortedItemInColumn
           .sort((a, b) => a.task_order - b.task_order)
           .map((i) => i.id);
@@ -286,6 +370,35 @@ export const slice = createSlice({
       }
       delete state.byId[action.payload];
     });
+    builder.addCase(patchQuestion.fulfilled, (state, action) => {
+      const question: IQuestion = action.payload;
+      question.id = "Q" + question.id;
+      state.byId[question.id] = question;
+    });
+    builder.addCase(createQuestion.pending, (state) => {
+      state.createLoading = true;
+    });
+    builder.addCase(createQuestion.fulfilled, (state, action) => {
+      const question: IQuestion = action.payload;
+      question.id = "Q" + question.id;
+      state.byId[question.id] = question;
+      state.byColumn[action.payload.column].push(question.id);
+      state.createQuestionDialogOpen = false;
+      state.createLoading = false;
+    });
+    builder.addCase(createQuestion.rejected, (state) => {
+      state.createLoading = false;
+    });
+    builder.addCase(deleteQuestion.fulfilled, (state, action) => {
+      for (const [column, questions] of Object.entries(state.byColumn)) {
+        for (let i = 0; i < questions.length; i++) {
+          if (questions[i] === "Q" + action.payload) {
+            state.byColumn[column].splice(i, 1);
+          }
+        }
+      }
+      delete state.byId[action.payload];
+    });
   },
 });
 
@@ -298,6 +411,10 @@ export const {
   setCreateNoteDialogOpen,
   setCreateNoteDialogColumn,
   setNotesByColumn,
+  setEditQuestionDialogOpen,
+  setCreateQuestionDialogOpen,
+  setCreateQuestionDialogColumn,
+  setQuestionsByColumn,
 } = slice.actions;
 
 /////////////////
@@ -307,10 +424,11 @@ export const updateItemsByColumn = (
   itemsByColumn: ItemsByColumn
 ): AppThunk => async (dispatch: AppDispatch, getState: () => RootState) => {
   const state = getState();
-  const previousNotesByColumn = state.item.byColumn;
+  const previousItemsByColumn = state.item.byColumn;
   const boardId = state.board.detail?.id;
   let notesNeedUpdate = false;
   let tasksNeedUpdate = false;
+  let questionsNeedUpdate = false;
 
   const notesByColumn: OrderedItemsByColumn = {};
   for (const columnId in itemsByColumn) {
@@ -354,6 +472,27 @@ export const updateItemsByColumn = (
     }
   }
 
+  const questionsByColumn: OrderedItemsByColumn = {};
+  for (const columnId in itemsByColumn) {
+    for (let i = 0; i < itemsByColumn[columnId].length; i++) {
+      if (itemsByColumn[columnId][i].startsWith("Q")) {
+        const task: OrderedItem = {
+          id: itemsByColumn[columnId][i].substring(1),
+          order: i,
+        };
+
+        if (questionsByColumn[columnId] == null) {
+          questionsByColumn[columnId] = [];
+        }
+        questionsByColumn[columnId].push(task);
+      }
+    }
+
+    if (questionsByColumn[columnId] && questionsByColumn[columnId].length > 0) {
+      questionsNeedUpdate = true;
+    }
+  }
+
   try {
     dispatch(setNotesByColumn(itemsByColumn));
 
@@ -372,8 +511,16 @@ export const updateItemsByColumn = (
         order: Object.values(tasksByColumn).flat(),
       });
     }
+
+    if (questionsNeedUpdate) {
+      await api.post(API_SORT_QUESTIONS, {
+        board: boardId,
+        questions: questionsByColumn,
+        order: Object.values(questionsByColumn).flat(),
+      });
+    }
   } catch (err) {
-    dispatch(setNotesByColumn(previousNotesByColumn));
+    dispatch(setNotesByColumn(previousItemsByColumn));
     dispatch(createErrorToast(err.toString()));
   }
 };

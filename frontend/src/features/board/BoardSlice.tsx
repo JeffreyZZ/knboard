@@ -1,5 +1,13 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import { Board, IColumn, ITask, INote, Label, NanoBoard } from "types";
+import {
+  Board,
+  IColumn,
+  ITask,
+  INote,
+  IQuestion,
+  Label,
+  NanoBoard,
+} from "types";
 import api, { API_BOARDS } from "api";
 import { RootState } from "store";
 import { logout } from "features/auth/AuthSlice";
@@ -31,6 +39,7 @@ export const initialState: InitialState = {
 interface ColumnsResponse extends IColumn {
   tasks: ITask[];
   notes: INote[];
+  questions: IQuestion[];
 }
 
 interface BoardDetailResponse extends Board {

@@ -17,6 +17,8 @@ import {
   setCreateDialogOpen,
   setCreateNoteDialogColumn,
   setCreateNoteDialogOpen,
+  setCreateQuestionDialogColumn,
+  setCreateQuestionDialogOpen,
 } from "features/task/ColumnItemSlice";
 import { css } from "@emotion/core";
 
@@ -162,9 +164,15 @@ const ColumnTitle = ({ id, title, tasksCount, ...props }: Props) => {
   };
 
   /*dispatch to TaskSlice reducer to create question*/
-  const handleAddQuestion = () => {
+  const handleAddTask = () => {
     dispatch(setCreateDialogColumn(id));
     dispatch(setCreateDialogOpen(true));
+    handleOptionsClose();
+  };
+
+  const handleAddQuestion = () => {
+    dispatch(setCreateQuestionDialogColumn(id));
+    dispatch(setCreateQuestionDialogOpen(true));
     handleOptionsClose();
   };
 
@@ -228,6 +236,21 @@ const ColumnTitle = ({ id, title, tasksCount, ...props }: Props) => {
           }}
         >
           <OptionsContent>
+            <div>
+              <Button
+                startIcon={<FontAwesomeIcon fixedWidth icon={faPlus} />}
+                onClick={handleAddTask}
+                data-testid="add-task"
+                size="small"
+                css={css`
+                  font-size: 12px;
+                  font-weight: bold;
+                  color: ${ACTION_G};
+                `}
+              >
+                Add task
+              </Button>
+            </div>
             <div>
               <Button
                 startIcon={<FontAwesomeIcon fixedWidth icon={faPlus} />}

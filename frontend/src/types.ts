@@ -85,6 +85,10 @@ export interface NotesByColumn {
   [key: string]: Id[];
 }
 
+export interface QuestionsByColumn {
+  [key: string]: Id[];
+}
+
 export interface User {
   id: number;
   username: string;
@@ -141,5 +145,20 @@ export interface INote extends IColumnItem {
 
 export interface NewNote
   extends Omit<INote, "id" | "created" | "modified" | "task_order"> {
+  column: Id;
+}
+
+export interface IQuestion extends IColumnItem {
+  created: string;
+  modified: string;
+  title: string;
+  description: string;
+  labels: Id[];
+  assignees: Id[];
+  priority: PriorityValue;
+}
+
+export interface NewQuestion
+  extends Omit<IQuestion, "id" | "created" | "modified" | "task_order"> {
   column: Id;
 }

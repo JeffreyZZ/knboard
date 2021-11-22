@@ -12,8 +12,10 @@ import MemberDialog from "features/member/MemberDialog";
 import { currentBoardOwner } from "./BoardSlice";
 import CreateTaskDialog from "features/task/CreateTaskDialog";
 import CreateNoteDialog from "features/task/CreateNoteDialog";
+import CreateQuestionDialog from "features/task/CreateQuestionDialog";
 import EditTaskDialog from "features/task/EditTaskDialog";
 import EditNoteDialog from "features/task/EditNoteDialog";
+import EditQuestionDialog from "features/task/EditQuestionDialog";
 import { Button } from "@material-ui/core";
 import { PRIMARY } from "utils/colors";
 import { addColumn } from "features/column/ColumnSlice";
@@ -155,8 +157,10 @@ const BoardBar = () => {
       <MemberListDialog />
       <EditTaskDialog />
       <EditNoteDialog />
+      <EditQuestionDialog />
       <CreateTaskDialog />
       <CreateNoteDialog />
+      <CreateQuestionDialog />
       <LabelDialog />
     </Container>
   );

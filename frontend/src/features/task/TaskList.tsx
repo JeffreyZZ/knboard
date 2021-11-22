@@ -2,7 +2,7 @@ import React from "react";
 import styled from "@emotion/styled";
 import { R50, T50, COLUMN_COLOR } from "utils/colors";
 import { grid, barHeight, taskWidth } from "const";
-import { IColumnItem, ITask, INote } from "types";
+import { IColumnItem, ITask, INote, IQuestion } from "types";
 import {
   DroppableProvided,
   DroppableStateSnapshot,
@@ -10,6 +10,7 @@ import {
 } from "react-beautiful-dnd";
 import Task from "./Task";
 import Note from "./Note";
+import Question from "./Question";
 import { css } from "@emotion/core";
 
 export const getBackgroundColor = (
@@ -73,6 +74,11 @@ const InnerTaskList = ({ items }: TaskListProps) => {
     if (items[counter].id.startsWith("T")) {
       const task = items[counter] as ITask;
       sections.push(<Task key={task.id} task={task} index={counter} />);
+    } else if (items[counter].id.startsWith("Q")) {
+      const question = items[counter] as IQuestion;
+      sections.push(
+        <Question key={question.id} question={question} index={counter} />
+      );
     } else {
       const note = items[counter] as INote;
       sections.push(<Note key={note.id} note={note} index={counter} />);
