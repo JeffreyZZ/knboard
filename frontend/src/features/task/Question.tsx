@@ -6,9 +6,9 @@ import {
   Draggable,
   DraggableStateSnapshot,
 } from "react-beautiful-dnd";
-import { N30, N0, N70, PRIMARY } from "utils/colors";
+import { B75, B100, N70, PRIMARY } from "utils/colors";
 import { PRIO_COLORS } from "const";
-import { taskContainerStyles } from "styles";
+import { questionContainerStyles } from "styles";
 import { AvatarGroup } from "@material-ui/lab";
 import { css } from "@emotion/core";
 import { useSelector, useDispatch } from "react-redux";
@@ -25,10 +25,10 @@ const getBackgroundColor = (isDragging: boolean, isGroupedOver: boolean) => {
   }
 
   if (isGroupedOver) {
-    return N30;
+    return B100;
   }
 
-  return N0;
+  return B75;
 };
 
 const getBorderColor = (isDragging: boolean) =>
@@ -189,7 +189,7 @@ const Question = ({ question: question, style, index }: Props) => {
           data-index={index}
           aria-label={`question ${question.title}`}
           onClick={handleClick}
-          css={taskContainerStyles}
+          css={questionContainerStyles}
         >
           <Content>
             <TextContent>{question.title}</TextContent>
