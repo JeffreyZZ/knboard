@@ -77,7 +77,6 @@ class Item(SortableMixin, TimeStampedModel):
 
 class Task(Item):
     # mdclub
-    question_id = models.BigAutoField(primary_key=True)  # Comment="问题ID"
     user_id = models.IntegerField()  # Comment="用户ID"
     content_markdown = models.TextField(null=True)  # Comment="原始的正文内容"
     content_rendered = models.TextField(null=True)  # Comment="过滤渲染后的正文内容"
@@ -104,7 +103,7 @@ class Task(Item):
     column = SortableForeignKey(Column, related_name="tasks", on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.question_id} - {self.title}"
+        return f"{self.id} - {self.title}"
 
     class Meta:
         ordering = ["task_order"]

@@ -33,10 +33,6 @@ class TaskSerializer(serializers.ModelSerializer):
     assignees = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.all(), many=True, required=False
     )
-
-    # expose database question_id as id
-    # TODO: need to simplify it later to avoid this conversion.
-    id = serializers.IntegerField(source='question_id', required=False)
     
     # explose content_markdown as description
     # TODO: need to simplify it later to avoid this conversion
