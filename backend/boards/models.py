@@ -171,3 +171,30 @@ class Comment(TimeStampedModel):
 
     class Meta:
         ordering = ["created"]
+
+
+class QuestionComment(TimeStampedModel):
+    # mdclub
+    comment_id = models.BigAutoField(primary_key=True)  # 回答评论ID
+    commentable_id = models.IntegerField()  # 评论目标的ID
+    commentable_type = models.CharField(max_length=11)  # 评论目标类型：article、question、answer、comment
+    user_id = models.IntegerField()  # 用户ID
+    content = models.TextField()  # 原始正文内容
+    reply_count = models.IntegerField(default=0)  # 回复数量
+    vote_count = models.IntegerField(default=0)  # 投票数，赞成票-反对票，可以为负数
+    vote_up_count = models.IntegerField(default=0)  # 赞成票总数
+    vote_down_count = models.IntegerField(default=0)  # 反对票总数
+    create_time = models.PositiveIntegerField(default=0)  # 创建时间
+    update_time = models.PositiveIntegerField(default=0)  # 更新时间
+    delete_time = models.PositiveIntegerField(default=0)  # 删除时间
+
+    def __str__(self):
+        return f"{self.comment_id} - {self.commentable_id}"
+
+    class Meta:
+        db_table = "comment"
+        ordering = ["created"]
+        indexes = [
+            models.Index(fields=['user_id', 'create_time',
+                         'update_time', 'vote_count'])
+        ]

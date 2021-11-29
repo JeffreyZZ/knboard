@@ -15,13 +15,14 @@ from rest_framework.viewsets import GenericViewSet
 from django.db.models import Q
 from django.db.models import Prefetch
 
-from .models import Board, Note, Task, Question, Column, Label, Comment
+from .models import Board, Note, Task, Question, Column, Label, Comment, QuestionComment
 from .permissions import IsOwner, IsOwnerForDangerousMethods
 from .serializers import (
     BoardSerializer,
     TaskSerializer,
     NoteSerializer,
     QuestionSerializer,
+    QuestionCommentSerializer,
     ColumnSerializer,
     BoardDetailSerializer,
     MemberSerializer,
@@ -140,6 +141,35 @@ class QuestionViewSet(ModelDetailViewSet):
     def get_queryset(self):
         user = self.request.user
         return super().get_queryset().filter(column__board__members=user)
+
+
+class QuestionCommentViewSet(
+    mixins.CreateModelMixin,
+    mixins.DestroyModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet,
+):
+    queryset = QuestionComment.objects.all()
+    serializer_class = QuestionCommentSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["comment_id"]
+
+    def get_queryset(self):
+        return (
+            super()
+            .get_queryset()
+            .filter()
+        )
+
+    def create(self, request, *args, **kwargs):
+        request.data.update(dict(user_id=request.user.id))
+        request.data.update(dict(commentable_type='question'))
+        return super().create(request, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):
+        return super().destroy(request, *args, **kwargs)
 
 
 class CommentViewSet(

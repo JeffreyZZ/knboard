@@ -9,6 +9,7 @@ import boardReducer from "./features/board/BoardSlice";
 import columnReducer from "./features/column/ColumnSlice";
 import columnItemReducer from "./features/task/ColumnItemSlice";
 import commentReducer from "./features/comment/CommentSlice";
+import questionCommentReducer from "./features/questioncomment/QuestionCommentSlice";
 import labelReducer from "./features/label/LabelSlice";
 import memberReducer from "./features/member/MemberSlice";
 import responsiveReducer from "./features/responsive/ResponsiveSlice";
@@ -23,6 +24,7 @@ export const rootReducer = combineReducers({
   board: boardReducer,
   column: columnReducer,
   comment: commentReducer,
+  questionComment: questionCommentReducer,
   member: memberReducer,
   label: labelReducer,
   responsive: responsiveReducer,

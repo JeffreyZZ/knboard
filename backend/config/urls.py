@@ -33,6 +33,7 @@ from boards.api import (
     TaskViewSet,
     NoteViewSet,
     QuestionViewSet,
+    QuestionCommentViewSet,
     SortColumn,
     SortTask,
     SortNote,
@@ -49,6 +50,7 @@ router.register(r"labels", LabelViewSet)
 router.register(r"tasks", TaskViewSet)
 router.register(r"notes", NoteViewSet)
 router.register(r"questions", QuestionViewSet)
+router.register(r"qcomments", QuestionCommentViewSet)
 router.register(r"comments", CommentViewSet)
 
 urlpatterns = [

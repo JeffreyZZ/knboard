@@ -162,3 +162,17 @@ export interface NewQuestion
   extends Omit<IQuestion, "id" | "created" | "modified" | "task_order"> {
   column: Id;
 }
+
+export interface QuestionComment {
+  id: number;
+  commentable_id: number;
+  user_id: number;
+  content: string;
+  created: string;
+  modified: string;
+}
+
+export type NewQuestionComment = Omit<
+  QuestionComment,
+  "id" | "user_id" | "created" | "modified"
+>;

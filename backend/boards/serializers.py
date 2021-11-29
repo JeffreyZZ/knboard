@@ -5,7 +5,7 @@ from rest_framework import serializers
 from rest_framework.validators import ValidationError
 
 from accounts.serializers import BoardMemberSerializer
-from .models import Board, Note, Question, Task, Column, Label, Comment
+from .models import Board, Note, Question, QuestionComment, Task, Column, Label, Comment
 
 User = get_user_model()
 
@@ -203,6 +203,16 @@ class QuestionSerializer(serializers.ModelSerializer):
             "task_order",
             "column",
         ]
+
+
+class QuestionCommentSerializer(serializers.ModelSerializer):
+    # expose database comment_id as id
+    # TODO: need to simplify it later to avoid this conversion.
+    id = serializers.IntegerField(source='comment_id', required=False)
+
+    class Meta:
+        model = QuestionComment
+        fields = ["id", "commentable_type", "commentable_id", "user_id", "content", "created", "modified"]
 
 
 class CommentSerializer(serializers.ModelSerializer):

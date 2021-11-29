@@ -57,7 +57,7 @@ import { formatDistanceToNow } from "date-fns";
 import getMetaKey from "utils/shortcuts";
 import LabelChip from "components/LabelChip";
 import PriorityOption from "components/PriorityOption";
-import CommentSection from "features/comment/CommentSection";
+import QuestionCommentSection from "features/questioncomment/QuestionCommentSection";
 
 const mdParser = new MarkdownIt({ breaks: true });
 
@@ -468,7 +468,9 @@ const EditQuestionDialog = () => {
               </DescriptionActions>
             )}
           </Description>
-          <CommentSection taskId={Number(question.id.substring(1))} />
+          <QuestionCommentSection
+            questionId={Number(question.id.substring(1))}
+          />
         </Main>
         <Side theme={theme}>
           <QuestionAssignees question={question} />

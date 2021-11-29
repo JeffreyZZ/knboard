@@ -32,6 +32,7 @@ export const API_COLUMNS = "/api/columns/";
 export const API_TASKS = "/api/tasks/";
 export const API_NOTES = "/api/notes/";
 export const API_QUESTIONS = "/api/questions/";
+export const API_QUESTIONCOMMENTS = "/api/qcomments/";
 export const API_COMMENTS = "/api/comments/";
 export const API_LABELS = "/api/labels/";
 
