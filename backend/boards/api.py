@@ -166,6 +166,12 @@ class QuestionCommentViewSet(
     def create(self, request, *args, **kwargs):
         request.data.update(dict(user_id=request.user.id))
         request.data.update(dict(commentable_type='question'))
+
+        # bump the comment count by 1
+        question = Question.objects.get(question_id=request.data.get('commentable_id'))
+        question.comment_count += 1 
+        question.save()
+
         return super().create(request, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):
