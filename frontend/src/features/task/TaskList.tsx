@@ -68,7 +68,7 @@ interface TaskListProps {
 }
 
 const InnerTaskList = ({ items }: TaskListProps) => {
-  const sections = [];
+  const sections: any[] = [];
 
   for (let counter = 0; counter < items.length; counter++) {
     if (items[counter].id.startsWith("T")) {

@@ -18,7 +18,11 @@ import {
 import styled from "@emotion/styled";
 import { css } from "@emotion/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash, faAlignLeft } from "@fortawesome/free-solid-svg-icons";
+import {
+  faTrash,
+  faAlignLeft,
+  faFileUpload,
+} from "@fortawesome/free-solid-svg-icons";
 import { createInfoToast } from "features/toast/ToastSlice";
 import { PRIMARY, TASK_G } from "utils/colors";
 import { IColumn, ItemsByColumn, Label, INote } from "types";
@@ -46,6 +50,7 @@ import {
 import { formatDistanceToNow } from "date-fns";
 import getMetaKey from "utils/shortcuts";
 import LabelChip from "components/LabelChip";
+import AttachmentAddPopup from "./AttachmentAddPopup";
 
 const mdParser = new MarkdownIt({ breaks: true });
 
@@ -456,11 +461,23 @@ const EditNoteDialog = () => {
                 font-size: 12px;
                 font-weight: bold;
                 color: ${TASK_G};
-                margin-bottom: 2rem;
               `}
             >
               Delete note ({getMetaKey()}+⌫)
             </Button>
+            <AttachmentAddPopup>
+              <Button
+                startIcon={<FontAwesomeIcon fixedWidth icon={faFileUpload} />}
+                size="small"
+                css={css`
+                  font-size: 12px;
+                  font-weight: bold;
+                  color: ${TASK_G};
+                `}
+              >
+                Attach picture
+              </Button>
+            </AttachmentAddPopup>
           </ButtonsContainer>
           <Text>
             Updated {formatDistanceToNow(new Date(note.modified))} ago

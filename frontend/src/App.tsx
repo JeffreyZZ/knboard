@@ -10,6 +10,9 @@ import { theme, modalPopperAutocompleteModalIndex } from "./const";
 import store, { RootState } from "./store";
 import { FOCUS_BOX_SHADOW } from "utils/colors";
 
+// enable semantic-ui here although it's now using material-ui.
+import "semantic-ui-css/semantic.min.css";
+
 const loadAuthenticatedApp = () => import("./AuthenticatedApp");
 const AuthenticatedApp = React.lazy(loadAuthenticatedApp);
 const UnauthenticatedApp = React.lazy(() => import("./features/auth/Auth"));
