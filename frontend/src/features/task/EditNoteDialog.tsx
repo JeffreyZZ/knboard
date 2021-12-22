@@ -264,6 +264,11 @@ const EditNoteDialog = () => {
     handleClose();
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  const onAttachmentCreate = () => {
+    const unused = 1;
+  };
+
   const handleNotImplemented = () => {
     dispatch(createInfoToast("Not implemented yet 😟"));
   };
@@ -465,7 +470,7 @@ const EditNoteDialog = () => {
             >
               Delete note ({getMetaKey()}+⌫)
             </Button>
-            <AttachmentAddPopup>
+            <AttachmentAddPopup onCreate={onAttachmentCreate}>
               <Button
                 startIcon={<FontAwesomeIcon fixedWidth icon={faFileUpload} />}
                 size="small"

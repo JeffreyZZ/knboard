@@ -5,6 +5,13 @@ import styles from "./Popup.module.css";
 
 interface Props {
   children: any;
+  /* 
+    This dynamic keys for TypeScript interface to allow add properites dynamicially.
+    For this popup component, it uses the dyanmic properties to pass in functions
+    related to components wrapped by the popup. This is flexible design for the popup
+    to wrap other components.
+  */
+  [key: string]: any;
 }
 
 export default (WrappedComponent) => {
