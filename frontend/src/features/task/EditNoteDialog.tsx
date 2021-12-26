@@ -12,6 +12,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   setEditNoteDialogOpen,
   deleteNote,
+  attachImage,
   updateItemsByColumn,
   patchNote,
 } from "./ColumnItemSlice";
@@ -264,9 +265,14 @@ const EditNoteDialog = () => {
     handleClose();
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  const onAttachmentCreate = () => {
-    const unused = 1;
+  const onAttachmentCreate = ({ file }) => {
+    const newImage = {
+      title: file.name,
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      item_id: note.id.slice(1),
+      cover: file,
+    };
+    dispatch(attachImage(newImage));
   };
 
   const handleNotImplemented = () => {

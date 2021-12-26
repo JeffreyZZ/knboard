@@ -5,7 +5,7 @@ from rest_framework import serializers
 from rest_framework.validators import ValidationError
 
 from accounts.serializers import BoardMemberSerializer
-from .models import Board, Note, Question, QuestionComment, Task, Column, Label, Comment
+from .models import Board, Note, Question, QuestionComment, Task, Column, Label, Comment, Image
 
 User = get_user_model()
 
@@ -259,3 +259,9 @@ class BoardDetailSerializer(serializers.ModelSerializer):
 
 class MemberSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
+
+
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Image
+        fields = '__all__'

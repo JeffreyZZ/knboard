@@ -6,16 +6,16 @@ from django.db.models.expressions import Value
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import mixins, viewsets
 from rest_framework import filters
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_200_OK
+from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
 from django.db.models import Q
 from django.db.models import Prefetch
 
-from .models import Board, Note, Task, Question, Column, Label, Comment, QuestionComment
+from .models import Board, Note, Task, Question, Column, Label, Comment, QuestionComment, Image
 from .permissions import IsOwner, IsOwnerForDangerousMethods
 from .serializers import (
     BoardSerializer,
@@ -29,6 +29,7 @@ from .serializers import (
     BoardMemberSerializer,
     LabelSerializer,
     CommentSerializer,
+    ImageSerializer
 )
 from .viewsets import ModelDetailViewSet
 
@@ -451,3 +452,20 @@ def sort_model(request, Model, table):
                 obj.save(update_fields=[order_field_name])
 
     return Response(status=HTTP_200_OK)
+
+
+class ImageView(APIView):
+    queryset = Image.objects.all()
+    serializer_class = ImageSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return super().get_queryset()
+
+    def post(self, request, *args, **kwargs):
+        image_serializer = ImageSerializer(data=request.data)
+        if image_serializer.is_valid():
+            image_serializer.save() 
+            return Response(image_serializer.data, status=HTTP_201_CREATED)
+        else:
+            return Response(image_serializer.errors, status=HTTP_400_BAD_REQUEST)

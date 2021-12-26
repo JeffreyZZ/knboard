@@ -7,10 +7,12 @@ import {
   ITask,
   INote,
   IQuestion,
+  IAttachImage,
   Id,
   NewTask,
   NewNote,
   NewQuestion,
+  NewImage,
   PriorityValue,
 } from "types";
 import { fetchBoardById } from "features/board/BoardSlice";
@@ -27,6 +29,7 @@ import api, {
   API_NOTES,
   API_SORT_QUESTIONS,
   API_QUESTIONS,
+  API_IMAGES,
 } from "api";
 import { addColumn, deleteColumn } from "features/column/ColumnSlice";
 import { deleteLabel } from "features/label/LabelSlice";
@@ -177,6 +180,37 @@ export const createQuestion = createAsyncThunk<
     }
   }
 );
+
+/////////////////
+// Attach
+/////////////////
+interface AttachImageResponse extends IAttachImage {
+  column: Id;
+}
+
+export const attachImage = createAsyncThunk<
+  AttachImageResponse,
+  NewImage,
+  {
+    rejectValue: string;
+  }
+>("image/attachStatus", async (image, { dispatch, rejectWithValue }) => {
+  try {
+    const formData = new FormData();
+    formData.append("cover", image.cover);
+    formData.append("title", image.title);
+    formData.append("item_id", image.item_id);
+    const response = await api.post(`${API_IMAGES}`, formData, {
+      headers: {
+        "content-type": "multipart/form-data",
+      },
+    });
+    dispatch(createSuccessToast("Image attached"));
+    return response.data;
+  } catch (err) {
+    return rejectWithValue(err.message);
+  }
+});
 
 /////////////////
 // Delete

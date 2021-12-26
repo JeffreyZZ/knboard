@@ -35,6 +35,7 @@ export const API_QUESTIONS = "/api/questions/";
 export const API_QUESTIONCOMMENTS = "/api/qcomments/";
 export const API_COMMENTS = "/api/comments/";
 export const API_LABELS = "/api/labels/";
+export const API_IMAGES = "/api/images/";
 
 export const API_SORT_COLUMNS = "/api/sort/column/";
 export const API_SORT_TASKS = "/api/sort/task/";

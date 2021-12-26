@@ -198,3 +198,12 @@ class QuestionComment(TimeStampedModel):
             models.Index(fields=['user_id', 'create_time',
                          'update_time', 'vote_count'])
         ]
+
+
+class Image(models.Model):
+    item_id = models.IntegerField()  # 图片所属的Item ID
+    title = models.CharField(max_length=100, blank=False)
+    cover = models.ImageField(upload_to='images')
+    
+    def __str__(self):
+        return f"{self.title}"

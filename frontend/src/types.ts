@@ -176,3 +176,13 @@ export type NewQuestionComment = Omit<
   QuestionComment,
   "id" | "user_id" | "created" | "modified"
 >;
+
+export interface IAttachImage {
+  id: number;
+}
+
+export interface NewImage {
+  title: string;
+  item_id: string;
+  cover: File;
+}
