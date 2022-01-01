@@ -1,5 +1,5 @@
 import React from "react";
-import { ITask, Label } from "types";
+import { IColumnItem, Label } from "types";
 import { useSelector } from "react-redux";
 import LabelChip from "components/LabelChip";
 import styled from "@emotion/styled";
@@ -12,12 +12,12 @@ const Container = styled.div`
 `;
 
 interface Props {
-  task: ITask;
+  item: IColumnItem;
 }
 
-const TaskLabels = ({ task }: Props) => {
+const Labels = ({ item }: Props) => {
   const labelsById = useSelector(selectLabelEntities);
-  const labels = task.labels.map((labelId) => labelsById[labelId]) as Label[];
+  const labels = item.labels.map((labelId) => labelsById[labelId]) as Label[];
 
   return (
     <Container>
@@ -28,4 +28,4 @@ const TaskLabels = ({ task }: Props) => {
   );
 };
 
-export default TaskLabels;
+export default Labels;

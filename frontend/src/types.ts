@@ -39,6 +39,7 @@ export interface IColumn {
 
 export interface IColumnItem {
   id: string;
+  labels: Id[];
   task_order: number;
 }
 
@@ -54,7 +55,6 @@ export interface ITask extends IColumnItem {
   modified: string;
   title: string;
   description: string;
-  labels: Id[];
   assignees: Id[];
   priority: PriorityValue;
   images: IAttachImage[];
@@ -142,7 +142,6 @@ export interface INote extends IColumnItem {
   created: string;
   modified: string;
   description: string;
-  labels: Id[];
   images: IAttachImage[];
 }
 
@@ -157,7 +156,6 @@ export interface IQuestion extends IColumnItem {
   modified: string;
   title: string;
   description: string;
-  labels: Id[];
   assignees: Id[];
   priority: PriorityValue;
 }

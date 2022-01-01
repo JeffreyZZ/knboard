@@ -14,7 +14,7 @@ import { css } from "@emotion/core";
 import { useSelector, useDispatch } from "react-redux";
 import { Avatar } from "@material-ui/core";
 import { setEditDialogOpen } from "./ColumnItemSlice";
-import TaskLabels from "./TaskLabels";
+import Labels from "./Labels";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { selectMembersEntities } from "features/member/MemberSlice";
@@ -187,7 +187,7 @@ const Task = ({ task: task, style, index }: Props) => {
           <Content>
             <TextContent>{task.title}</TextContent>
             <TaskId>id: {task.id}</TaskId>
-            <TaskLabels task={task} />
+            <Labels item={task} />
             <TaskFooter task={task} />
           </Content>
         </Container>

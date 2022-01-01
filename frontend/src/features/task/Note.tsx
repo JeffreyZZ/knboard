@@ -1,7 +1,7 @@
 import React from "react";
 import { WithTheme } from "@material-ui/core";
 import styled from "@emotion/styled";
-import { INote, ITask } from "types";
+import { INote } from "types";
 import {
   DraggableProvided,
   Draggable,
@@ -11,7 +11,7 @@ import { N30, N70, Y75 } from "utils/colors";
 import { noteContainerStyles } from "styles";
 import { useDispatch } from "react-redux";
 import { setEditNoteDialogOpen } from "./ColumnItemSlice";
-import TaskLabels from "./TaskLabels";
+import Labels from "./Labels";
 import MarkdownIt from "markdown-it";
 import MdEditor from "react-markdown-editor-lite";
 import { MD_EDITOR_PLUGINS, MD_READ_ONLY_CONFIG } from "const";
@@ -54,8 +54,7 @@ export const Content = styled.div`
   width: 100%;
 `;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const TaskId = styled.small`
+const NoteId = styled.small`
   flex-grow: 1;
   flex-shrink: 1;
   margin: 0;
@@ -150,6 +149,7 @@ const Note = ({ note: note, style, index }: Props) => {
           css={noteContainerStyles}
         >
           <Content>
+            {showAttachedImage(note)}
             <EditorWrapper editing={false}>
               <MdEditor
                 plugins={MD_EDITOR_PLUGINS}
@@ -158,9 +158,8 @@ const Note = ({ note: note, style, index }: Props) => {
                 renderHTML={(text) => mdParser.render(text)}
               />
             </EditorWrapper>
-            {showAttachedImage(note)}
-            <TaskId>id: {note.id}</TaskId>
-            <TaskLabels task={note as ITask} />
+            <NoteId>id: {note.id}</NoteId>
+            <Labels item={note} />
           </Content>
         </Container>
       )}
