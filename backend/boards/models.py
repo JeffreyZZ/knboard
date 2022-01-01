@@ -201,9 +201,9 @@ class QuestionComment(TimeStampedModel):
 
 
 class Image(models.Model):
-    item_id = models.IntegerField()  # 图片所属的Item ID
     title = models.CharField(max_length=100, blank=False)
     cover = models.ImageField(upload_to='images')
-    
+    note = models.ForeignKey(Note, related_name="images", on_delete=models.CASCADE)
+
     def __str__(self):
         return f"{self.title}"

@@ -95,6 +95,12 @@ class TaskSerializer(serializers.ModelSerializer):
         ]
 
 
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Image
+        fields = '__all__'
+
+
 class NoteSerializer(serializers.ModelSerializer):
     column = serializers.PrimaryKeyRelatedField(
         queryset=Column.objects.all()
@@ -103,6 +109,8 @@ class NoteSerializer(serializers.ModelSerializer):
     labels = serializers.PrimaryKeyRelatedField(
         queryset=Label.objects.all(), many=True, required=False
     )
+
+    images = ImageSerializer(many=True, read_only=True)
 
     # explose content_markdown as description
     # TODO: need to simplify it later to avoid this conversion
@@ -128,7 +136,7 @@ class NoteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Note
-        fields = ["id", "task_order", "column", "description", "labels", "created", "modified"]
+        fields = ["id", "task_order", "column", "description", "labels", "created", "modified", "images"]
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -259,9 +267,3 @@ class BoardDetailSerializer(serializers.ModelSerializer):
 
 class MemberSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
-
-
-class ImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Image
-        fields = '__all__'
