@@ -199,7 +199,7 @@ export const attachImage = createAsyncThunk<
     const formData = new FormData();
     formData.append("cover", image.cover);
     formData.append("title", image.title);
-    formData.append("item_id", image.item_id);
+    formData.append("note", image.item_id);
     const response = await api.post(`${API_IMAGES}`, formData, {
       headers: {
         "content-type": "multipart/form-data",

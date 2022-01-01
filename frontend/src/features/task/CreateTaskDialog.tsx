@@ -27,7 +27,7 @@ import {
   Key,
 } from "const";
 import { selectAllMembers } from "features/member/MemberSlice";
-import { Priority, BoardMember, Label } from "types";
+import { Priority, BoardMember, Label, IAttachImage } from "types";
 import { createMdEditorStyles } from "styles";
 import AvatarTag from "components/AvatarTag";
 import AvatarOption from "components/AvatarOption";
@@ -122,6 +122,7 @@ const CreateTaskDialog = () => {
         labels: labels.map((l) => l.id),
         assignees: assignees.map((a) => a.id),
         priority: priority.value,
+        images: [] as IAttachImage[],
       };
       dispatch(createTask(newTask));
     }

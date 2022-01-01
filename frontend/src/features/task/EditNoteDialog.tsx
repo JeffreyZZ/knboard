@@ -23,6 +23,7 @@ import {
   faTrash,
   faAlignLeft,
   faFileUpload,
+  faImages,
 } from "@fortawesome/free-solid-svg-icons";
 import { createInfoToast } from "features/toast/ToastSlice";
 import { PRIMARY, TASK_G } from "utils/colors";
@@ -52,6 +53,7 @@ import { formatDistanceToNow } from "date-fns";
 import getMetaKey from "utils/shortcuts";
 import LabelChip from "components/LabelChip";
 import AttachmentAddPopup from "./AttachmentAddPopup";
+import Attachments from "./Attachments/Attachments";
 
 const mdParser = new MarkdownIt({ breaks: true });
 
@@ -121,6 +123,14 @@ const Description = styled.div`
 
 const DescriptionActions = styled.div`
   display: flex;
+`;
+
+const AttachmentsHeader = styled.div`
+  display: flex;
+  align-items: center;
+  h3 {
+    margin: 0 0 0 12px;
+  }
 `;
 
 const Text = styled.p`
@@ -275,6 +285,18 @@ const EditNoteDialog = () => {
     dispatch(attachImage(newImage));
   };
 
+  const onAttachmentUpdate = () => {
+    dispatch(createInfoToast("Not implemented yet 😟"));
+  };
+
+  const onAttachmentDelete = () => {
+    dispatch(createInfoToast("Not implemented yet 😟"));
+  };
+
+  const handleCoverUpdate = () => {
+    dispatch(createInfoToast("Not implemented yet 😟"));
+  };
+
   const handleNotImplemented = () => {
     dispatch(createInfoToast("Not implemented yet 😟"));
   };
@@ -405,6 +427,17 @@ const EditNoteDialog = () => {
               </DescriptionActions>
             )}
           </Description>
+          <AttachmentsHeader>
+            <FontAwesomeIcon icon={faImages} />
+            <h3>Attachments</h3>
+          </AttachmentsHeader>
+          {/*
+          <Attachments
+            items={attachments}
+            onUpdate={onAttachmentUpdate}
+            onDelete={onAttachmentDelete}
+            onCoverUpdate={handleCoverUpdate}
+          /> */}
         </Main>
         <Side theme={theme}>
           <Autocomplete

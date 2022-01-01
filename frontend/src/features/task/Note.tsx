@@ -112,6 +112,10 @@ const getStyle = (provided: DraggableProvided, style?: Record<string, any>) => {
   };
 };
 
+const showAttachedImage = (note: INote) => {
+  if (note.images.length > 0) return <img src={note.images[0].cover}></img>;
+};
+
 interface Props {
   note: INote;
   style?: Record<string, any>;
@@ -154,6 +158,7 @@ const Note = ({ note: note, style, index }: Props) => {
                 renderHTML={(text) => mdParser.render(text)}
               />
             </EditorWrapper>
+            {showAttachedImage(note)}
             <TaskId>id: {note.id}</TaskId>
             <TaskLabels task={note as ITask} />
           </Content>

@@ -57,11 +57,13 @@ export interface ITask extends IColumnItem {
   labels: Id[];
   assignees: Id[];
   priority: PriorityValue;
+  images: IAttachImage[];
 }
 
 export interface NewTask
   extends Omit<ITask, "id" | "created" | "modified" | "task_order"> {
   column: Id;
+  images: IAttachImage[];
 }
 
 export interface OrderedItem {
@@ -141,11 +143,13 @@ export interface INote extends IColumnItem {
   modified: string;
   description: string;
   labels: Id[];
+  images: IAttachImage[];
 }
 
 export interface NewNote
   extends Omit<INote, "id" | "created" | "modified" | "task_order"> {
   column: Id;
+  images: IAttachImage[];
 }
 
 export interface IQuestion extends IColumnItem {
@@ -179,6 +183,9 @@ export type NewQuestionComment = Omit<
 
 export interface IAttachImage {
   id: number;
+  title: string;
+  cover: string;
+  note: number;
 }
 
 export interface NewImage {

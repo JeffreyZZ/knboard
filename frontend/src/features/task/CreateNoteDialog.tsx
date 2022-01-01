@@ -98,6 +98,7 @@ const CreateNoteDialog = () => {
         description,
         column: columnId,
         labels: labels.map((l) => l.id),
+        images: [],
       };
       dispatch(createNote(newNote));
     }
