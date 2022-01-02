@@ -11,7 +11,10 @@ import store, { RootState } from "./store";
 import { FOCUS_BOX_SHADOW } from "utils/colors";
 
 // enable semantic-ui here although it's now using material-ui.
+// TODO: use a single framework instead both semantic-ui and material-ui
 import "semantic-ui-css/semantic.min.css";
+// TODO: move this into styles.tsx
+import "./styles.module.scss";
 
 const loadAuthenticatedApp = () => import("./AuthenticatedApp");
 const AuthenticatedApp = React.lazy(loadAuthenticatedApp);

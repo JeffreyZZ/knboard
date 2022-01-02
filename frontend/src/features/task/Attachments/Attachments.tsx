@@ -5,9 +5,10 @@ import { useToggle } from "../../../utils/hooks";
 import Item from "./Item";
 
 import styles from "./Attachments.module.scss";
+import { IAttachImage } from "types";
 
 interface Props {
-  items: any;
+  items: IAttachImage[];
   onUpdate: any;
   onDelete: any;
   onCoverUpdate: any;
@@ -54,12 +55,12 @@ const Attachments = React.memo(
         {visibleItems.map((item) => (
           <Item
             key={item.id}
-            name={item.name}
-            url={item.url}
-            coverUrl={item.coverUrl}
-            createdAt={item.createdAt}
-            isCover={item.isCover}
-            isPersisted={item.isPersisted}
+            name={item.title}
+            url={item.cover}
+            coverUrl={item.cover}
+            createdAt={null}
+            isCover={false}
+            isPersisted={true}
             onCoverSelect={() => handleCoverSelect(item.id)}
             onCoverDeselect={handleCoverDeselect}
             onUpdate={(data: any) => handleUpdate(item.id, data)}

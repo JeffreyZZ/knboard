@@ -431,13 +431,12 @@ const EditNoteDialog = () => {
             <FontAwesomeIcon icon={faImages} />
             <h3>Attachments</h3>
           </AttachmentsHeader>
-          {/*
           <Attachments
-            items={attachments}
+            items={note.images}
             onUpdate={onAttachmentUpdate}
             onDelete={onAttachmentDelete}
             onCoverUpdate={handleCoverUpdate}
-          /> */}
+          />
         </Main>
         <Side theme={theme}>
           <Autocomplete

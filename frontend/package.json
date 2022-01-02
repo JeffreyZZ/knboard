@@ -38,6 +38,7 @@
     "axios": "0.19.2",
     "axios-mock-adapter": "1.18.1",
     "babel-jest": "24.9.0",
+    "classnames": "^2.3.1",
     "cypress": "4.3.0",
     "date-fns": "^2.15.0",
     "dequal": "^2.0.2",
