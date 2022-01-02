@@ -58,7 +58,7 @@ const Attachments = React.memo(
             name={item.title}
             url={item.cover}
             coverUrl={item.cover}
-            createdAt={null}
+            created={item.created}
             isCover={false}
             isPersisted={true}
             onCoverSelect={() => handleCoverSelect(item.id)}

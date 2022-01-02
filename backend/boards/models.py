@@ -64,8 +64,9 @@ class Priority(models.TextChoices):
     MEDIUM = "M", "Medium"
     LOW = "L", "Low"
 
-# Base class for column item : Task, Note and Question
+
 class Item(SortableMixin, TimeStampedModel):
+    # Base class for column item : Task, Note and Question
     task_order = models.PositiveIntegerField(default=0, editable=False, db_index=True)
 
     def __str__(self):
@@ -200,10 +201,14 @@ class QuestionComment(TimeStampedModel):
         ]
 
 
-class Image(models.Model):
+class Image(TimeStampedModel):
+    # image model of attached image for the board items: Note
     title = models.CharField(max_length=100, blank=False)
     cover = models.ImageField(upload_to='images')
     note = models.ForeignKey(Note, related_name="images", on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.title}"
+        return f"{self.id} - {self.title}"
+
+    class Meta:
+        ordering = ["created"]

@@ -10,7 +10,7 @@ interface Props {
   name: string;
   url: string;
   coverUrl: string;
-  createdAt: Date;
+  created: Date;
   isCover: boolean;
   isPersisted: boolean;
   onCoverSelect: any;
@@ -25,7 +25,7 @@ const Item = React.memo(
     name,
     url,
     coverUrl,
-    createdAt,
+    created,
     isCover,
     isPersisted,
     onCoverSelect,
@@ -90,7 +90,9 @@ const Item = React.memo(
         </div>
         <div className={styles.details}>
           <span className={styles.name}>{name}</span>
-          <span className={styles.date}>{createdAt}</span>
+          <span className={styles.date}>
+            {new Date(created).toLocaleString()}
+          </span>
           {coverUrl && (
             <span className={styles.options}>
               <button

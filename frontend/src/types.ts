@@ -184,6 +184,7 @@ export interface IAttachImage {
   title: string;
   cover: string;
   note: number;
+  created: Date;
 }
 
 export interface NewImage {
