@@ -107,7 +107,7 @@ const Item = React.memo(
                   className={styles.optionIcon}
                 />
                 <span className={styles.optionText}>
-                  {isCover ? "removeCover" : "makeCover"}
+                  {isCover ? "Remove Cover" : "Make Cover"}
                 </span>
               </button>
             </span>

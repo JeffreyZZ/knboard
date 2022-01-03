@@ -72,9 +72,7 @@ const Attachments = React.memo(
           <Button
             fluid
             content={
-              isOpened
-                ? "action.showFewerAttachments"
-                : "action.showAllAttachments"
+              isOpened ? "Show Fewer Attachments" : "Show All Attachments"
             }
             className={styles.toggleButton}
             onClick={handleToggleClick}

@@ -434,6 +434,11 @@ export const slice = createSlice({
       }
       delete state.byId[action.payload];
     });
+    builder.addCase(attachImage.fulfilled, (state, action) => {
+      // add the new attached image into the note's images (state) to trigger the componenet re-render
+      const image: IAttachImage = action.payload;
+      (state.byId["N" + image.note] as INote).images.push(image);
+    });
   },
 });
 
