@@ -2,6 +2,7 @@ from adminsortable.fields import SortableForeignKey
 from adminsortable.models import SortableMixin
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.utils.functional import empty
 from model_utils.models import TimeStampedModel
 
 User = get_user_model()
@@ -68,6 +69,7 @@ class Priority(models.TextChoices):
 class Item(SortableMixin, TimeStampedModel):
     # Base class for column item : Task, Note and Question
     task_order = models.PositiveIntegerField(default=0, editable=False, db_index=True)
+    coverid = models.IntegerField(blank=True, null=True) # ID of cover image
 
     def __str__(self):
         return f"{self.id} - {self.content_rendered}"
@@ -204,7 +206,7 @@ class QuestionComment(TimeStampedModel):
 class Image(TimeStampedModel):
     # image model of attached image for the board items: Note
     title = models.CharField(max_length=100, blank=False)
-    cover = models.ImageField(upload_to='images')
+    image = models.ImageField(upload_to='images')
     note = models.ForeignKey(Note, related_name="images", on_delete=models.CASCADE)
 
     def __str__(self):

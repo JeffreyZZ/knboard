@@ -276,13 +276,13 @@ const EditNoteDialog = () => {
   };
 
   const onAttachmentCreate = ({ file }) => {
-    const newImage = {
+    const newFile = {
       title: file.name,
       // eslint-disable-next-line @typescript-eslint/camelcase
       item_id: note.id.slice(1),
-      cover: file,
+      content: file,
     };
-    dispatch(attachImage(newImage));
+    dispatch(attachImage(newFile));
   };
 
   const onAttachmentUpdate = () => {
@@ -293,8 +293,11 @@ const EditNoteDialog = () => {
     dispatch(createInfoToast("Not implemented yet 😟"));
   };
 
-  const handleCoverUpdate = () => {
-    dispatch(createInfoToast("Not implemented yet 😟"));
+  const handleCoverUpdate = (coverId: number) => {
+    if (noteId) {
+      const id = Number(noteId.substring(1));
+      dispatch(patchNote({ id: id, fields: { coverid: coverId } }));
+    }
   };
 
   const handleNotImplemented = () => {
@@ -433,6 +436,7 @@ const EditNoteDialog = () => {
           </AttachmentsHeader>
           <Attachments
             items={note.images}
+            coverId={note.coverid}
             onUpdate={onAttachmentUpdate}
             onDelete={onAttachmentDelete}
             onCoverUpdate={handleCoverUpdate}

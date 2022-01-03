@@ -9,6 +9,7 @@ import { IAttachImage } from "types";
 
 interface Props {
   items: IAttachImage[];
+  coverId: number;
   onUpdate: any;
   onDelete: any;
   onCoverUpdate: any;
@@ -16,7 +17,7 @@ interface Props {
 
 // eslint-disable-next-line react/display-name
 const Attachments = React.memo(
-  ({ items, onUpdate, onDelete, onCoverUpdate }: Props) => {
+  ({ items, coverId, onUpdate, onDelete, onCoverUpdate }: Props) => {
     const [isOpened, toggleOpened] = useToggle();
 
     const handleToggleClick = useCallback(() => {
@@ -56,10 +57,10 @@ const Attachments = React.memo(
           <Item
             key={item.id}
             name={item.title}
-            url={item.cover}
-            coverUrl={item.cover}
+            url={item.image}
+            coverUrl={item.image}
             created={item.created}
-            isCover={false}
+            isCover={item.id == coverId}
             isPersisted={true}
             onCoverSelect={() => handleCoverSelect(item.id)}
             onCoverDeselect={handleCoverDeselect}

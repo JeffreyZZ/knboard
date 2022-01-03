@@ -143,6 +143,7 @@ export interface INote extends IColumnItem {
   modified: string;
   description: string;
   images: IAttachImage[];
+  coverid: number;
 }
 
 export interface NewNote
@@ -182,13 +183,13 @@ export type NewQuestionComment = Omit<
 export interface IAttachImage {
   id: number;
   title: string;
-  cover: string;
+  image: string;
   note: number;
   created: Date;
 }
 
-export interface NewImage {
+export interface IUploadFile {
   title: string;
   item_id: string;
-  cover: File;
+  content: File;
 }

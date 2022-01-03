@@ -99,6 +99,7 @@ const CreateNoteDialog = () => {
         column: columnId,
         labels: labels.map((l) => l.id),
         images: [],
+        coverid: null,
       };
       dispatch(createNote(newNote));
     }

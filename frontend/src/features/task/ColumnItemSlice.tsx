@@ -12,7 +12,7 @@ import {
   NewTask,
   NewNote,
   NewQuestion,
-  NewImage,
+  IUploadFile,
   PriorityValue,
 } from "types";
 import { fetchBoardById } from "features/board/BoardSlice";
@@ -87,6 +87,7 @@ export const patchTask = createAsyncThunk<
 });
 
 interface PatchNoteFields {
+  coverid: number;
   description: string;
   labels: Id[];
 }
@@ -190,15 +191,15 @@ interface AttachImageResponse extends IAttachImage {
 
 export const attachImage = createAsyncThunk<
   AttachImageResponse,
-  NewImage,
+  IUploadFile,
   {
     rejectValue: string;
   }
 >("image/attachStatus", async (image, { dispatch, rejectWithValue }) => {
   try {
     const formData = new FormData();
-    formData.append("cover", image.cover);
     formData.append("title", image.title);
+    formData.append("image", image.content);
     formData.append("note", image.item_id);
     const response = await api.post(`${API_IMAGES}`, formData, {
       headers: {

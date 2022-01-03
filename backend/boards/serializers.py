@@ -136,7 +136,7 @@ class NoteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Note
-        fields = ["id", "task_order", "column", "description", "labels", "created", "modified", "images"]
+        fields = ["id", "task_order", "column", "description", "labels", "created", "modified", "images", "coverid"]
 
 
 class QuestionSerializer(serializers.ModelSerializer):

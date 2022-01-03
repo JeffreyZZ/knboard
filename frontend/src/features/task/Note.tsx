@@ -111,8 +111,17 @@ const getStyle = (provided: DraggableProvided, style?: Record<string, any>) => {
   };
 };
 
-const showAttachedImage = (note: INote) => {
-  if (note.images.length > 0) return <img src={note.images[0].cover}></img>;
+const showCoverImage = (note: INote) => {
+  if (
+    note.images.length > 0 &&
+    note.coverid &&
+    note.images.filter((i) => i.id === note.coverid).length > 0
+  )
+    return (
+      <img
+        src={note.images.filter((i) => i.id === note.coverid)[0].image}
+      ></img>
+    );
 };
 
 interface Props {
@@ -149,7 +158,7 @@ const Note = ({ note: note, style, index }: Props) => {
           css={noteContainerStyles}
         >
           <Content>
-            {showAttachedImage(note)}
+            {showCoverImage(note)}
             <EditorWrapper editing={false}>
               <MdEditor
                 plugins={MD_EDITOR_PLUGINS}
