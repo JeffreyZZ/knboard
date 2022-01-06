@@ -214,3 +214,7 @@ class Image(TimeStampedModel):
 
     class Meta:
         ordering = ["created"]
+
+    def delete(self, using=None, keep_parents=False):
+        self.image.delete(save=True)
+        super().delete()

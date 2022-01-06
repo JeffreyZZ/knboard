@@ -1,4 +1,5 @@
 from itertools import chain
+from typing import NewType
 
 from django.contrib.auth import get_user_model
 from django.db import transaction
@@ -469,3 +470,14 @@ class ImageView(APIView):
             return Response(image_serializer.data, status=HTTP_201_CREATED)
         else:
             return Response(image_serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+# TODO:merge with ImageView
+class DeleteImage(APIView):
+    queryset = Image.objects.all()
+    serializer_class = ImageSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        image = Image.objects.get(id=pk)
+        image.delete()
+        return Response(pk)

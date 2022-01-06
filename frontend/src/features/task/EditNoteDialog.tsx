@@ -13,6 +13,7 @@ import {
   setEditNoteDialogOpen,
   deleteNote,
   attachImage,
+  deleteImage,
   updateItemsByColumn,
   patchNote,
 } from "./ColumnItemSlice";
@@ -289,8 +290,14 @@ const EditNoteDialog = () => {
     dispatch(createInfoToast("Not implemented yet 😟"));
   };
 
-  const onAttachmentDelete = () => {
+  const onAttachmentDelete = (coverId: number) => {
     dispatch(createInfoToast("Not implemented yet 😟"));
+    if (
+      window.confirm("Are you sure? Deleting an attachement cannot be undone.")
+    ) {
+      dispatch(deleteImage(coverId));
+      handleClose();
+    }
   };
 
   const handleCoverUpdate = (coverId: number) => {

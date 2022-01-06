@@ -39,7 +39,8 @@ from boards.api import (
     SortNote,
     SortQuestion,
     CommentViewSet,
-    ImageView
+    ImageView,
+    DeleteImage
 )
 
 router = routers.DefaultRouter()
@@ -62,6 +63,7 @@ urlpatterns = [
     path("api/sort/note/", SortNote.as_view(), name="sort-note"),
     path("api/sort/question/", SortQuestion.as_view(), name="sort-question"),
     path("api/images/", ImageView.as_view(), name="attach-image"),
+    path("api/images/delete/<str:pk>", DeleteImage.as_view(), name="delete-image"),
     path("api-auth/", include("rest_framework.urls")),
     path("auth/", include("dj_rest_auth.urls")),
     path("auth/registration/", include("dj_rest_auth.registration.urls")),

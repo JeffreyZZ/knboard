@@ -213,6 +213,19 @@ export const attachImage = createAsyncThunk<
   }
 });
 
+export const deleteImage = createAsyncThunk<Id, Id>(
+  "image/deleteStatus",
+  async (id, { dispatch, rejectWithValue }) => {
+    try {
+      await api.get(`${API_IMAGES}delete/${id}`);
+      dispatch(createSuccessToast("Image deleted"));
+      return id;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
 /////////////////
 // Delete
 /////////////////
@@ -438,6 +451,10 @@ export const slice = createSlice({
       // add the new attached image into the note's images (state) to trigger the componenet re-render
       const image: IAttachImage = action.payload;
       (state.byId["N" + image.note] as INote).images.push(image);
+    });
+    builder.addCase(deleteImage.fulfilled, (state, action) => {
+      const deletedImageId = action.payload;
+      //TODO: remove the image from note
     });
   },
 });

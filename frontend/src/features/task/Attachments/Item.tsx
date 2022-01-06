@@ -58,10 +58,14 @@ const Item = React.memo(
       );
     }
 
-    const filename = url.split("/").pop();
+    const filename = url?.split("/").pop();
     const extension = filename?.slice(
       (Math.max(0, filename.lastIndexOf(".")) || Infinity) + 1
     );
+
+    if (!filename) {
+      return;
+    }
 
     return (
       <div className={styles.wrapper} onClick={handleClick}>
@@ -113,17 +117,12 @@ const Item = React.memo(
             </span>
           )}
         </div>
-        <EditPopup
-          defaultData={{
-            name,
-          }}
-          onUpdate={onUpdate}
-          onDelete={onDelete}
+        <Button
+          className={classNames(styles.button, styles.target)}
+          onClick={onDelete}
         >
-          <Button className={classNames(styles.button, styles.target)}>
-            <Icon fitted name="pencil" size="small" />
-          </Button>
-        </EditPopup>
+          <Icon fitted name="trash" size="small" />
+        </Button>
       </div>
     );
   }
