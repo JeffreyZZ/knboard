@@ -8,8 +8,9 @@ import styles from "./Attachments.module.scss";
 import { IAttachImage } from "types";
 
 interface Props {
-  items: IAttachImage[];
+  images: IAttachImage[];
   coverId: number;
+  itemId: string;
   onUpdate: any;
   onDelete: any;
   onCoverUpdate: any;
@@ -17,7 +18,7 @@ interface Props {
 
 // eslint-disable-next-line react/display-name
 const Attachments = React.memo(
-  ({ items, coverId, onUpdate, onDelete, onCoverUpdate }: Props) => {
+  ({ images, coverId, itemId, onUpdate, onDelete, onCoverUpdate }: Props) => {
     const [isOpened, toggleOpened] = useToggle();
 
     const handleToggleClick = useCallback(() => {
@@ -43,32 +44,32 @@ const Attachments = React.memo(
     );
 
     const handleDelete = useCallback(
-      (id) => {
-        onDelete(id);
+      (id, itemId) => {
+        onDelete(id, itemId);
       },
       [onDelete]
     );
 
-    const visibleItems = isOpened ? items : items.slice(0, 4);
+    const visibleItems = isOpened ? images : images.slice(0, 4);
 
     return (
       <>
-        {visibleItems.map((item) => (
+        {visibleItems.map((image) => (
           <Item
-            key={item.id}
-            name={item.title}
-            url={item.image}
-            coverUrl={item.image}
-            created={item.created}
-            isCover={item.id == coverId}
+            key={image.id}
+            name={image.title}
+            url={image.image}
+            coverUrl={image.image}
+            created={image.created}
+            isCover={image.id == coverId}
             isPersisted={true}
-            onCoverSelect={() => handleCoverSelect(item.id)}
+            onCoverSelect={() => handleCoverSelect(image.id)}
             onCoverDeselect={handleCoverDeselect}
-            onUpdate={(data: any) => handleUpdate(item.id, data)}
-            onDelete={() => handleDelete(item.id)}
+            onUpdate={(data: any) => handleUpdate(image.id, data)}
+            onDelete={() => handleDelete(image.id, itemId)}
           />
         ))}
-        {items.length > 4 && (
+        {images.length > 4 && (
           <Button
             fluid
             content={

@@ -213,13 +213,18 @@ export const attachImage = createAsyncThunk<
   }
 });
 
-export const deleteImage = createAsyncThunk<Id, Id>(
+interface DeleteImage {
+  imageId: Id;
+  itemId: string;
+}
+
+export const deleteImage = createAsyncThunk<DeleteImage, DeleteImage>(
   "image/deleteStatus",
-  async (id, { dispatch, rejectWithValue }) => {
+  async (image, { dispatch, rejectWithValue }) => {
     try {
-      await api.get(`${API_IMAGES}delete/${id}`);
+      await api.get(`${API_IMAGES}delete/${image.imageId}`);
       dispatch(createSuccessToast("Image deleted"));
-      return id;
+      return image;
     } catch (err) {
       return rejectWithValue(err.message);
     }
@@ -336,14 +341,17 @@ export const slice = createSlice({
       state.byColumn = byColumn;
       state.byId = byId;
     });
+
     builder.addCase(patchTask.fulfilled, (state, action) => {
       const task: ITask = action.payload;
       task.id = "T" + task.id;
       state.byId[task.id] = task;
     });
+
     builder.addCase(createTask.pending, (state) => {
       state.createLoading = true;
     });
+
     builder.addCase(createTask.fulfilled, (state, action) => {
       const task: ITask = action.payload;
       task.id = "T" + task.id;
@@ -352,9 +360,11 @@ export const slice = createSlice({
       state.createDialogOpen = false;
       state.createLoading = false;
     });
+
     builder.addCase(createTask.rejected, (state) => {
       state.createLoading = false;
     });
+
     builder.addCase(deleteTask.fulfilled, (state, action) => {
       for (const [column, tasks] of Object.entries(state.byColumn)) {
         for (let i = 0; i < tasks.length; i++) {
@@ -365,12 +375,15 @@ export const slice = createSlice({
       }
       delete state.byId[action.payload];
     });
+
     builder.addCase(addColumn.fulfilled, (state, action) => {
       state.byColumn[action.payload.id] = [];
     });
+
     builder.addCase(deleteColumn.fulfilled, (state, action) => {
       delete state.byColumn[action.payload];
     });
+
     builder.addCase(deleteLabel.fulfilled, (state, action) => {
       const deletedLabelId = action.payload;
       for (const taskId in state.byId) {
@@ -380,6 +393,7 @@ export const slice = createSlice({
         );
       }
     });
+
     builder.addCase(removeBoardMember, (state, action) => {
       const deletedMemberId = action.payload;
       for (const taskId in state.byId) {
@@ -389,14 +403,17 @@ export const slice = createSlice({
         );
       }
     });
+
     builder.addCase(patchNote.fulfilled, (state, action) => {
       const note: INote = action.payload;
       note.id = "N" + note.id;
       state.byId[note.id] = note;
     });
+
     builder.addCase(createNote.pending, (state) => {
       state.createLoading = true;
     });
+
     builder.addCase(createNote.fulfilled, (state, action) => {
       const note: INote = action.payload;
       note.id = "N" + note.id;
@@ -405,9 +422,11 @@ export const slice = createSlice({
       state.createNoteDialogOpen = false;
       state.createLoading = false;
     });
+
     builder.addCase(createNote.rejected, (state) => {
       state.createLoading = false;
     });
+
     builder.addCase(deleteNote.fulfilled, (state, action) => {
       for (const [column, tasks] of Object.entries(state.byColumn)) {
         for (let i = 0; i < tasks.length; i++) {
@@ -418,6 +437,7 @@ export const slice = createSlice({
       }
       delete state.byId[action.payload];
     });
+
     builder.addCase(patchQuestion.fulfilled, (state, action) => {
       const question: IQuestion = action.payload;
       question.id = "Q" + question.id;
@@ -434,9 +454,11 @@ export const slice = createSlice({
       state.createQuestionDialogOpen = false;
       state.createLoading = false;
     });
+
     builder.addCase(createQuestion.rejected, (state) => {
       state.createLoading = false;
     });
+
     builder.addCase(deleteQuestion.fulfilled, (state, action) => {
       for (const [column, questions] of Object.entries(state.byColumn)) {
         for (let i = 0; i < questions.length; i++) {
@@ -447,14 +469,17 @@ export const slice = createSlice({
       }
       delete state.byId[action.payload];
     });
+
     builder.addCase(attachImage.fulfilled, (state, action) => {
       // add the new attached image into the note's images (state) to trigger the componenet re-render
       const image: IAttachImage = action.payload;
       (state.byId["N" + image.note] as INote).images.push(image);
     });
+
     builder.addCase(deleteImage.fulfilled, (state, action) => {
-      const deletedImageId = action.payload;
-      //TODO: remove the image from note
+      const deletedImage = action.payload as DeleteImage;
+      const note = state.byId[deletedImage.itemId] as INote;
+      note.images = note.images.filter((i) => i.id !== deletedImage.imageId);
     });
   },
 });

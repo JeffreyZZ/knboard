@@ -50,6 +50,14 @@ const Item = React.memo(
       [isCover, onCoverSelect, onCoverDeselect]
     );
 
+    const handleDeleteImageClick = useCallback(
+      (event) => {
+        event.stopPropagation();
+        onDelete();
+      },
+      [onDelete]
+    );
+
     if (!isPersisted) {
       return (
         <div className={classNames(styles.wrapper, styles.wrapperSubmitting)}>
@@ -119,7 +127,7 @@ const Item = React.memo(
         </div>
         <Button
           className={classNames(styles.button, styles.target)}
-          onClick={onDelete}
+          onClick={handleDeleteImageClick}
         >
           <Icon fitted name="trash" size="small" />
         </Button>

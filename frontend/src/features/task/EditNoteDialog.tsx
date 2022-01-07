@@ -295,8 +295,7 @@ const EditNoteDialog = () => {
     if (
       window.confirm("Are you sure? Deleting an attachement cannot be undone.")
     ) {
-      dispatch(deleteImage(coverId));
-      handleClose();
+      dispatch(deleteImage({ imageId: coverId, itemId: note.id }));
     }
   };
 
@@ -442,7 +441,8 @@ const EditNoteDialog = () => {
             <h3>Attachments</h3>
           </AttachmentsHeader>
           <Attachments
-            items={note.images}
+            images={note.images}
+            itemId={note.id.slice(1)}
             coverId={note.coverid}
             onUpdate={onAttachmentUpdate}
             onDelete={onAttachmentDelete}
