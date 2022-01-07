@@ -286,10 +286,6 @@ const EditNoteDialog = () => {
     dispatch(attachImage(newFile));
   };
 
-  const onAttachmentUpdate = () => {
-    dispatch(createInfoToast("Not implemented yet 😟"));
-  };
-
   const onAttachmentDelete = (coverId: number) => {
     dispatch(createInfoToast("Not implemented yet 😟"));
     if (
@@ -444,7 +440,6 @@ const EditNoteDialog = () => {
             images={note.images}
             itemId={note.id.slice(1)}
             coverId={note.coverid}
-            onUpdate={onAttachmentUpdate}
             onDelete={onAttachmentDelete}
             onCoverUpdate={handleCoverUpdate}
           />

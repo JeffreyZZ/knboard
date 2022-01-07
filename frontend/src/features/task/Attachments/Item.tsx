@@ -2,8 +2,6 @@ import React, { useCallback } from "react";
 import classNames from "classnames";
 import { Button, Icon, Label, Loader } from "semantic-ui-react";
 
-import EditPopup from "./EditPopup";
-
 import styles from "./Item.module.scss";
 
 interface Props {
@@ -15,7 +13,6 @@ interface Props {
   isPersisted: boolean;
   onCoverSelect: any;
   onCoverDeselect: any;
-  onUpdate: any;
   onDelete: any;
 }
 
@@ -30,7 +27,6 @@ const Item = React.memo(
     isPersisted,
     onCoverSelect,
     onCoverDeselect,
-    onUpdate,
     onDelete,
   }: Props) => {
     const handleClick = useCallback(() => {

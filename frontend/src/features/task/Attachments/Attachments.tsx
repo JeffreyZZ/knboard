@@ -11,14 +11,13 @@ interface Props {
   images: IAttachImage[];
   coverId: number;
   itemId: string;
-  onUpdate: any;
   onDelete: any;
   onCoverUpdate: any;
 }
 
 // eslint-disable-next-line react/display-name
 const Attachments = React.memo(
-  ({ images, coverId, itemId, onUpdate, onDelete, onCoverUpdate }: Props) => {
+  ({ images, coverId, itemId, onDelete, onCoverUpdate }: Props) => {
     const [isOpened, toggleOpened] = useToggle();
 
     const handleToggleClick = useCallback(() => {
@@ -35,13 +34,6 @@ const Attachments = React.memo(
     const handleCoverDeselect = useCallback(() => {
       onCoverUpdate(null);
     }, [onCoverUpdate]);
-
-    const handleUpdate = useCallback(
-      (id, data) => {
-        onUpdate(id, data);
-      },
-      [onUpdate]
-    );
 
     const handleDelete = useCallback(
       (id, itemId) => {
@@ -65,7 +57,6 @@ const Attachments = React.memo(
             isPersisted={true}
             onCoverSelect={() => handleCoverSelect(image.id)}
             onCoverDeselect={handleCoverDeselect}
-            onUpdate={(data: any) => handleUpdate(image.id, data)}
             onDelete={() => handleDelete(image.id, itemId)}
           />
         ))}
