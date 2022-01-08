@@ -81,8 +81,9 @@ interface PatchTaskFields {
 export const patchTask = createAsyncThunk<
   ITask,
   { id: Id; fields: Partial<PatchTaskFields> }
->("task/patchTaskStatus", async ({ id, fields }) => {
+>("task/patchTaskStatus", async ({ id, fields }, { dispatch }) => {
   const response = await api.patch(`${API_TASKS}${id}/`, fields);
+  dispatch(createSuccessToast("Task edited"));
   return response.data;
 });
 
@@ -95,8 +96,9 @@ interface PatchNoteFields {
 export const patchNote = createAsyncThunk<
   INote,
   { id: Id; fields: Partial<PatchNoteFields> }
->("note/patchNoteStatus", async ({ id, fields }) => {
+>("note/patchNoteStatus", async ({ id, fields }, { dispatch }) => {
   const response = await api.patch(`${API_NOTES}${id}/`, fields);
+  dispatch(createSuccessToast("Note edited"));
   return response.data;
 });
 
@@ -111,8 +113,9 @@ interface PatchQuestionFields {
 export const patchQuestion = createAsyncThunk<
   IQuestion,
   { id: Id; fields: Partial<PatchQuestionFields> }
->("question/patchQuestionStatus", async ({ id, fields }) => {
+>("question/patchQuestionStatus", async ({ id, fields }, { dispatch }) => {
   const response = await api.patch(`${API_QUESTIONS}${id}/`, fields);
+  dispatch(createSuccessToast("Question edited"));
   return response.data;
 });
 
