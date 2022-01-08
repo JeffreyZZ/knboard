@@ -287,7 +287,6 @@ const EditNoteDialog = () => {
   };
 
   const onAttachmentDelete = (coverId: number) => {
-    dispatch(createInfoToast("Not implemented yet 😟"));
     if (
       window.confirm("Are you sure? Deleting an attachement cannot be undone.")
     ) {

@@ -86,7 +86,7 @@ const Item = React.memo(
                 size="mini"
                 icon={{
                   name: "star",
-                  color: "grey",
+                  color: "orange",
                   inverted: true,
                 }}
                 className={styles.thumbnailLabel}
@@ -122,10 +122,11 @@ const Item = React.memo(
           )}
         </div>
         <Button
+          icon
           className={classNames(styles.button, styles.target)}
           onClick={handleDeleteImageClick}
         >
-          <Icon fitted name="trash" size="small" />
+          <Icon name="trash" />
         </Button>
       </div>
     );
