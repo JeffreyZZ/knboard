@@ -38,8 +38,8 @@ import { createMdEditorStyles, descriptionStyles } from "styles";
 import MarkdownIt from "markdown-it";
 import MdEditor from "react-markdown-editor-lite";
 import {
+  MD_EDITOR_CONFIG,
   MD_EDITOR_PLUGINS,
-  MD_EDITING_CONFIG,
   MD_READ_ONLY_CONFIG,
   Key,
   taskDialogHeight,
@@ -393,7 +393,7 @@ const EditNoteDialog = () => {
                 ref={editorRef}
                 plugins={MD_EDITOR_PLUGINS}
                 config={
-                  editingDescription ? MD_EDITING_CONFIG : MD_READ_ONLY_CONFIG
+                  editingDescription ? MD_EDITOR_CONFIG : MD_READ_ONLY_CONFIG
                 }
                 value={
                   editingDescription
