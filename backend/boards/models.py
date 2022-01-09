@@ -1,9 +1,13 @@
+import os
 from adminsortable.fields import SortableForeignKey
 from adminsortable.models import SortableMixin
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.db.models.signals import post_delete
+from django.dispatch.dispatcher import receiver
 from django.utils.functional import empty
 from model_utils.models import TimeStampedModel
+
 
 User = get_user_model()
 
@@ -216,5 +220,23 @@ class Image(TimeStampedModel):
         ordering = ["created"]
 
     def delete(self, using=None, keep_parents=False):
-        self.image.delete(save=True)
+        self.image.delete()
         super().delete()
+
+
+def _delete_file(path):
+    # Deletes file from filesystem.
+    if os.path.isfile(path):
+        os.remove(path)
+
+@receiver(post_delete, sender=Image)
+def delete_img_pre_delete_post(sender, instance, *args, **kwargs):
+    # Listen to post_delete to delete image file intentionlly when delete Note fk referenced by image object
+    # this also works for the deletion of the column. This reason is because that the delete() method for an 
+    # object is not necessarily called when deleting objects in bulk using a QuerySet or as a result of a 
+    # cascading delete. pre_delete and post_delete is recommended for this case by the following document:  
+    # https://docs.djangoproject.com/en/dev/topics/db/models/#overriding-model-methods
+    # Here is another example：
+    # https://stackoverflow.com/questions/33080360/how-to-delete-files-from-filesystem-using-post-delete-django-1-8 
+    if instance.image:
+       _delete_file(instance.image.path)     

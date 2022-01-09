@@ -480,4 +480,4 @@ class DeleteImage(APIView):
     def get(self, request, pk):
         image = Image.objects.get(id=pk)
         image.delete()
-        return Response(pk)
+        return Response(status=HTTP_200_OK)
