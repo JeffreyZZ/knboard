@@ -55,6 +55,7 @@ import getMetaKey from "utils/shortcuts";
 import LabelChip from "components/LabelChip";
 import AttachmentAddPopup from "./AttachmentAddPopup";
 import Attachments from "./Attachments/Attachments";
+import { useTranslation } from "react-i18next";
 
 const mdParser = new MarkdownIt({ breaks: true });
 
@@ -146,9 +147,8 @@ const ButtonsContainer = styled.div`
   align-items: flex-start;
 `;
 
-const DESCRIPTION_PLACEHOLDER = "Write here...";
-
 const EditNoteDialog = () => {
+  const { t } = useTranslation();
   const theme = useTheme();
   const dispatch = useDispatch();
   const columns = useSelector(selectAllColumns);
@@ -167,6 +167,8 @@ const EditNoteDialog = () => {
   const cancelRef = useRef<HTMLButtonElement>(null);
   const xsDown = useMediaQuery(theme.breakpoints.down("xs"));
   const open = noteId !== null;
+
+  const DESCRIPTION_PLACEHOLDER = t("common.writeHere"); // "Write here...";
 
   useEffect(() => {
     if (noteId && itemsById[noteId]) {
