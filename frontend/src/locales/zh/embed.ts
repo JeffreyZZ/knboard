@@ -10,6 +10,11 @@ export default {
       projectManagement: "Project management",
       serverConnectionFailed: "Server connection failed",
       unknownError: "Unknown error, try again later",
+      attachments: "附件",
+      description: "描述",
+    },
+
+    message: {
       writeHere: "写在这里...",
     },
 

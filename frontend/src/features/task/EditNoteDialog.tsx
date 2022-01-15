@@ -168,7 +168,7 @@ const EditNoteDialog = () => {
   const xsDown = useMediaQuery(theme.breakpoints.down("xs"));
   const open = noteId !== null;
 
-  const DESCRIPTION_PLACEHOLDER = t("common.writeHere"); // "Write here...";
+  const DESCRIPTION_PLACEHOLDER = t("message.writeHere"); // "Write here...";
 
   useEffect(() => {
     if (noteId && itemsById[noteId]) {
@@ -376,7 +376,7 @@ const EditNoteDialog = () => {
           <Header>id: {note.id}</Header>
           <DescriptionHeader>
             <FontAwesomeIcon icon={faAlignLeft} />
-            <h3>Description</h3>
+            <h3>{t("common.description")}</h3>
           </DescriptionHeader>
           <Description
             key={`${noteId}${editingDescription}`}
@@ -435,7 +435,7 @@ const EditNoteDialog = () => {
           </Description>
           <AttachmentsHeader>
             <FontAwesomeIcon icon={faImages} />
-            <h3>Attachments</h3>
+            <h3>{t("common.attachments")}</h3>
           </AttachmentsHeader>
           <Attachments
             images={note.images}

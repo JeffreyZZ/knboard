@@ -1,3 +1,8 @@
+## Localization
+
+http://localhost:3000/b/1?lng=en
+http://localhost:3000/b/1?lng=zh
+
 This project was bootstrapped with [cra-template-typekit](https://github.com/rrebase/cra-template-typekit)
 
 ## Available Scripts

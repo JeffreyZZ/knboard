@@ -10,6 +10,11 @@ export default {
       projectManagement: "Project management",
       serverConnectionFailed: "Server connection failed",
       unknownError: "Unknown error, try again later",
+      attachments: "Attachments",
+      description: "Description",
+    },
+
+    message: {
       writeHere: "Write here...",
     },
 
